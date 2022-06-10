@@ -2,7 +2,7 @@
   "name": "@parasaurolophus/node-red-eventsource",
   "version": "0.1.0",
   "description": "Wrap eventsource module as a node",
-  "main": "index.js",
+  "repository": "github:parasaurolophus/node-red-eventsource",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
