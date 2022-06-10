@@ -1,0 +1,25 @@
+{
+  "name": "@parasaurolophus/node-red-eventsource",
+  "version": "0.1.0",
+  "description": "Wrap eventsource module as a node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "eventsource",
+    "sse",
+    "node-red"
+  ],
+  "author": "parasaurolophus <apps@rader.us>",
+  "license": "MIT",
+  "node-red": {
+    "version": ">=2.0.0",
+    "nodes": [
+      "node-red-eventsource.js"
+    ]
+  },
+  "dependencies": {
+    "eventsource": "^2.0.2"
+  }
+}

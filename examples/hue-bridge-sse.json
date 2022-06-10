@@ -1,0 +1,83 @@
+[
+    {
+        "id": "40975e20e15ebaa8",
+        "type": "inject",
+        "z": "90b99d3a1e88b8fb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"url\":\"https://192.168.1.34/eventstream/clip/v2\",\"initDict\":{\"withCredentials\":false,\"https\":{\"rejectUnauthorized\":false},\"headers\":{\"hue-application-key\":\"-6ay0JIz8Kd1PV00yBYQ75bo6hlVBN2mopvXnrNa\"}}}",
+        "payloadType": "json",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "b138f88c49c2e354"
+            ]
+        ]
+    },
+    {
+        "id": "c9b6961055a6ee1b",
+        "type": "debug",
+        "z": "90b99d3a1e88b8fb",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "6e33e6a131844831",
+        "type": "json",
+        "z": "90b99d3a1e88b8fb",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 450,
+        "y": 180,
+        "wires": [
+            [
+                "c9b6961055a6ee1b"
+            ]
+        ]
+    },
+    {
+        "id": "b138f88c49c2e354",
+        "type": "EventSource",
+        "z": "90b99d3a1e88b8fb",
+        "name": "Hue Bridge SSE",
+        "x": 300,
+        "y": 180,
+        "wires": [
+            [
+                "6e33e6a131844831"
+            ]
+        ]
+    },
+    {
+        "id": "38b73de09a6450cc",
+        "type": "comment",
+        "z": "90b99d3a1e88b8fb",
+        "name": "Connect to a given SSE server",
+        "info": "**Change IP address and client access token in the `inject` node to match your Hue bridge setup!**",
+        "x": 210,
+        "y": 120,
+        "wires": []
+    }
+]
