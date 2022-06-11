@@ -1,6 +1,7 @@
 module.exports = function(RED) {
 
     const EventSource = require('eventsource')
+    const readyStateFill = ['yellow','green','red']
 
     function eventsource(config) {
 
@@ -11,18 +12,20 @@ module.exports = function(RED) {
 
             if (node.es) {
 
+                const fill = Math.min(readyStateFill.length - 1, Math.max(0, node.es.readyState))
+
                 node.status({
                     text: node.es.readyState,
                     shape: 'dot',
-                    fill: 'green'
+                    fill: readyStateFill[fill]
                 })
 
             } else {
 
                 node.status({
-                    text: 'disconnected',
+                    text: '-1',
                     shape: 'ring',
-                    fill: 'yellow'
+                    fill: 'gray'
                 })
 
             }
@@ -43,7 +46,7 @@ module.exports = function(RED) {
 
         }
 
-        function open(msg) {
+        function connect(msg) {
 
             close()
             node.url = msg.payload.url
@@ -55,21 +58,20 @@ module.exports = function(RED) {
             node.initDict = msg.payload.initDict || {}
             node.es = new EventSource(node.url, node.initDict)
 
+            node.es.onopen = (event) => {
+                status()
+            }
+
             node.es.onerror = (err) => {
-                if (err) {
-                    node.warn(err)
-                }
+                status()
             }
 
             node.es.onmessage = (event) => {
+                status()
                 node.send({
-                    topic: event.event,
-                    payload: event.data
+                    payload: event
                 })
             }
-
-            status()
-
         }
 
         node.es = null
@@ -80,7 +82,7 @@ module.exports = function(RED) {
 
         node.on('input', function(msg) {
 
-            open(msg)
+            connect(msg)
             //node.send(msg)
 
         })
