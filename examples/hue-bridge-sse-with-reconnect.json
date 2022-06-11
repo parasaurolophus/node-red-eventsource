@@ -1,5 +1,15 @@
 [
     {
+        "id": "22ef22de4df9c4d2",
+        "type": "comment",
+        "z": "90b99d3a1e88b8fb",
+        "name": "Track status of EventSource connection",
+        "info": "Replace IP address and client access key values in the first `change` node to match your setup.",
+        "x": 190,
+        "y": 60,
+        "wires": []
+    },
+    {
         "id": "c9b6961055a6ee1b",
         "type": "debug",
         "z": "90b99d3a1e88b8fb",
@@ -12,8 +22,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1360,
-        "y": 100,
+        "x": 1380,
+        "y": 140,
         "wires": []
     },
     {
@@ -24,8 +34,8 @@
         "scope": [
             "6837055cc88c1f7d"
         ],
-        "x": 80,
-        "y": 160,
+        "x": 100,
+        "y": 200,
         "wires": [
             [
                 "caf5324dced3d7bc"
@@ -52,8 +62,8 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "x": 330,
-        "y": 160,
+        "x": 350,
+        "y": 200,
         "wires": [
             [
                 "588184a8aaa2d7a9"
@@ -80,8 +90,8 @@
         "bytopic": "all",
         "topic": "topic",
         "outputs": 1,
-        "x": 530,
-        "y": 140,
+        "x": 550,
+        "y": 180,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -100,8 +110,8 @@
         "septopics": false,
         "property": "status.text",
         "topi": "topic",
-        "x": 210,
-        "y": 160,
+        "x": 230,
+        "y": 200,
         "wires": [
             [
                 "1fa20e89a17e3be7"
@@ -127,8 +137,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 720,
-        "y": 100,
+        "x": 740,
+        "y": 140,
         "wires": [
             [
                 "6837055cc88c1f7d"
@@ -152,8 +162,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 540,
-        "y": 60,
+        "x": 560,
+        "y": 100,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -168,8 +178,8 @@
         "property": "payload",
         "action": "obj",
         "pretty": false,
-        "x": 1230,
-        "y": 100,
+        "x": 1250,
+        "y": 140,
         "wires": [
             [
                 "c9b6961055a6ee1b"
@@ -195,8 +205,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1080,
-        "y": 100,
+        "x": 1100,
+        "y": 140,
         "wires": [
             [
                 "4c158b3acee18913"
@@ -222,8 +232,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 500,
-        "y": 200,
+        "x": 520,
+        "y": 240,
         "wires": [
             [
                 "588184a8aaa2d7a9"
@@ -235,8 +245,8 @@
         "type": "EventSource",
         "z": "90b99d3a1e88b8fb",
         "name": "Hue Bridge SSE",
-        "x": 900,
-        "y": 100,
+        "x": 920,
+        "y": 140,
         "wires": [
             [
                 "4ddc87e572d6ec3a"

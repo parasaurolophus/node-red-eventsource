@@ -12,8 +12,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 920,
-        "y": 60,
+        "x": 900,
+        "y": 120,
         "wires": []
     },
     {
@@ -36,10 +36,10 @@
         "to": "",
         "reg": false,
         "x": 280,
-        "y": 60,
+        "y": 120,
         "wires": [
             [
-                "6837055cc88c1f7d"
+                "8947a09ac2a1d788"
             ]
         ]
     },
@@ -61,7 +61,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 60,
+        "y": 120,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -76,8 +76,8 @@
         "property": "payload",
         "action": "obj",
         "pretty": false,
-        "x": 790,
-        "y": 60,
+        "x": 770,
+        "y": 120,
         "wires": [
             [
                 "c9b6961055a6ee1b"
@@ -103,8 +103,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 640,
-        "y": 60,
+        "x": 620,
+        "y": 120,
         "wires": [
             [
                 "4c158b3acee18913"
@@ -112,12 +112,22 @@
         ]
     },
     {
-        "id": "6837055cc88c1f7d",
+        "id": "22ef22de4df9c4d2",
+        "type": "comment",
+        "z": "90b99d3a1e88b8fb",
+        "name": "Subscribe to SSE events from a Philips Hue Bridge",
+        "info": "Replace IP address and client access key values in the first `change` node to match your setup.",
+        "x": 230,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "8947a09ac2a1d788",
         "type": "EventSource",
         "z": "90b99d3a1e88b8fb",
-        "name": "Hue Bridge SSE",
-        "x": 460,
-        "y": 60,
+        "name": "",
+        "x": 450,
+        "y": 120,
         "wires": [
             [
                 "4ddc87e572d6ec3a"
