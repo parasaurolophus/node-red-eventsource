@@ -1,6 +1,6 @@
 {
   "name": "@parasaurolophus/node-red-eventsource",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Wrap eventsource module as a node",
   "repository": "github:parasaurolophus/node-red-eventsource",
   "scripts": {
@@ -14,7 +14,7 @@
   "author": "parasaurolophus <apps@rader.us>",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=12.0.0"
   },
   "dependencies": {
     "eventsource": "^2.0.2"
