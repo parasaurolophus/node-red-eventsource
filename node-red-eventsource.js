@@ -23,7 +23,7 @@ module.exports = function(RED) {
             } else {
 
                 node.status({
-                    text: '-1',
+                    text: -1,
                     shape: 'ring',
                     fill: 'gray'
                 })
@@ -76,17 +76,15 @@ module.exports = function(RED) {
 
         node.es = null
         node.initDict = {}
-        status()
+        setInterval(status, 1000)
 
         node.on('close', close)
 
         node.on('input', function(msg) {
 
             connect(msg)
-            //node.send(msg)
 
         })
-
     }
 
     RED.nodes.registerType("EventSource", eventsource)
