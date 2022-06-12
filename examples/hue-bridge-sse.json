@@ -1,8 +1,34 @@
 [
     {
+        "id": "56d877f261cf7604",
+        "type": "group",
+        "z": "90b99d3a1e88b8fb",
+        "name": "Subscribe to events sent by a Philips Hue bridge",
+        "style": {
+            "stroke": "none",
+            "fill": "#000000",
+            "fill-opacity": "0.1",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "c9b6961055a6ee1b",
+            "fd17c5b4813e6c49",
+            "751ef5bac92f8a81",
+            "4c158b3acee18913",
+            "4ddc87e572d6ec3a",
+            "8947a09ac2a1d788"
+        ],
+        "x": 34,
+        "y": 59,
+        "w": 1112,
+        "h": 82
+    },
+    {
         "id": "c9b6961055a6ee1b",
         "type": "debug",
         "z": "90b99d3a1e88b8fb",
+        "g": "56d877f261cf7604",
         "name": "hue event",
         "active": true,
         "tosidebar": true,
@@ -12,15 +38,16 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 900,
-        "y": 120,
+        "x": 1040,
+        "y": 100,
         "wires": []
     },
     {
         "id": "fd17c5b4813e6c49",
         "type": "change",
         "z": "90b99d3a1e88b8fb",
-        "name": "",
+        "g": "56d877f261cf7604",
+        "name": "set eventsource parameters",
         "rules": [
             {
                 "t": "set",
@@ -35,8 +62,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 280,
-        "y": 120,
+        "x": 340,
+        "y": 100,
         "wires": [
             [
                 "8947a09ac2a1d788"
@@ -47,6 +74,7 @@
         "id": "751ef5bac92f8a81",
         "type": "inject",
         "z": "90b99d3a1e88b8fb",
+        "g": "56d877f261cf7604",
         "name": "",
         "props": [
             {
@@ -60,8 +88,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 120,
+        "x": 140,
+        "y": 100,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -72,12 +100,13 @@
         "id": "4c158b3acee18913",
         "type": "json",
         "z": "90b99d3a1e88b8fb",
+        "g": "56d877f261cf7604",
         "name": "",
         "property": "payload",
         "action": "obj",
         "pretty": false,
-        "x": 770,
-        "y": 120,
+        "x": 910,
+        "y": 100,
         "wires": [
             [
                 "c9b6961055a6ee1b"
@@ -88,7 +117,8 @@
         "id": "4ddc87e572d6ec3a",
         "type": "change",
         "z": "90b99d3a1e88b8fb",
-        "name": "",
+        "g": "56d877f261cf7604",
+        "name": "get payload.data",
         "rules": [
             {
                 "t": "set",
@@ -103,8 +133,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 620,
-        "y": 120,
+        "x": 750,
+        "y": 100,
         "wires": [
             [
                 "4c158b3acee18913"
@@ -112,22 +142,13 @@
         ]
     },
     {
-        "id": "22ef22de4df9c4d2",
-        "type": "comment",
-        "z": "90b99d3a1e88b8fb",
-        "name": "Subscribe to SSE events from a Philips Hue Bridge",
-        "info": "Replace IP address and client access key values in the first `change` node to match your setup.",
-        "x": 230,
-        "y": 60,
-        "wires": []
-    },
-    {
         "id": "8947a09ac2a1d788",
         "type": "EventSource",
         "z": "90b99d3a1e88b8fb",
-        "name": "",
-        "x": 450,
-        "y": 120,
+        "g": "56d877f261cf7604",
+        "name": "Hue Bridge SSE",
+        "x": 560,
+        "y": 100,
         "wires": [
             [
                 "4ddc87e572d6ec3a"

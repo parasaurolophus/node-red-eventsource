@@ -1,41 +1,39 @@
 [
     {
-        "id": "22ef22de4df9c4d2",
-        "type": "comment",
+        "id": "c305ab1e9b808571",
+        "type": "group",
         "z": "90b99d3a1e88b8fb",
-        "name": "Track status of EventSource connection",
-        "info": "Replace IP address and client access key values in the first `change` node to match your setup.",
-        "x": 190,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "c9b6961055a6ee1b",
-        "type": "debug",
-        "z": "90b99d3a1e88b8fb",
-        "name": "hue event",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1380,
-        "y": 140,
-        "wires": []
+        "name": "Attempt reconnect if status.text is 2",
+        "style": {
+            "stroke": "none",
+            "fill": "#ff0000",
+            "fill-opacity": "0.1",
+            "label": true,
+            "color": "#ff0000"
+        },
+        "nodes": [
+            "cd3a1c4d818b9dfd",
+            "1fa20e89a17e3be7",
+            "588184a8aaa2d7a9",
+            "caf5324dced3d7bc",
+            "0be4f5d4391afc3c"
+        ],
+        "x": 14,
+        "y": 179,
+        "w": 952,
+        "h": 82
     },
     {
         "id": "cd3a1c4d818b9dfd",
         "type": "status",
         "z": "90b99d3a1e88b8fb",
-        "name": "",
+        "g": "c305ab1e9b808571",
+        "name": "Hue Bridge SSE Status",
         "scope": [
             "6837055cc88c1f7d"
         ],
-        "x": 100,
-        "y": 200,
+        "x": 140,
+        "y": 220,
         "wires": [
             [
                 "caf5324dced3d7bc"
@@ -46,30 +44,25 @@
         "id": "1fa20e89a17e3be7",
         "type": "switch",
         "z": "90b99d3a1e88b8fb",
-        "name": "",
-        "property": "status.text",
+        "g": "c305ab1e9b808571",
+        "name": "if payload is 2",
+        "property": "payload",
         "propertyType": "msg",
         "rules": [
             {
-                "t": "neq",
-                "v": "1",
-                "vt": "str"
-            },
-            {
-                "t": "else"
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
             }
         ],
         "checkall": "false",
         "repair": false,
-        "outputs": 2,
-        "x": 350,
-        "y": 200,
+        "outputs": 1,
+        "x": 700,
+        "y": 220,
         "wires": [
             [
                 "588184a8aaa2d7a9"
-            ],
-            [
-                "74f7e4116347d692"
             ]
         ]
     },
@@ -77,6 +70,7 @@
         "id": "588184a8aaa2d7a9",
         "type": "trigger",
         "z": "90b99d3a1e88b8fb",
+        "g": "c305ab1e9b808571",
         "name": "",
         "op1": "",
         "op2": "",
@@ -86,12 +80,12 @@
         "extend": true,
         "overrideDelay": false,
         "units": "s",
-        "reset": "",
+        "reset": "1",
         "bytopic": "all",
         "topic": "topic",
         "outputs": 1,
-        "x": 550,
-        "y": 180,
+        "x": 870,
+        "y": 220,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -102,16 +96,45 @@
         "id": "caf5324dced3d7bc",
         "type": "rbe",
         "z": "90b99d3a1e88b8fb",
+        "g": "c305ab1e9b808571",
         "name": "",
-        "func": "rbe",
+        "func": "rbei",
         "gap": "",
         "start": "",
         "inout": "out",
         "septopics": false,
         "property": "status.text",
         "topi": "topic",
-        "x": 230,
-        "y": 200,
+        "x": 310,
+        "y": 220,
+        "wires": [
+            [
+                "0be4f5d4391afc3c"
+            ]
+        ]
+    },
+    {
+        "id": "0be4f5d4391afc3c",
+        "type": "change",
+        "z": "90b99d3a1e88b8fb",
+        "g": "c305ab1e9b808571",
+        "name": "get status.text as number",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$number(status.text)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 220,
         "wires": [
             [
                 "1fa20e89a17e3be7"
@@ -119,10 +142,54 @@
         ]
     },
     {
+        "id": "144a8ea04ca059da",
+        "type": "group",
+        "z": "90b99d3a1e88b8fb",
+        "name": "Subscribe to events sent by a Philips Hue bridge",
+        "style": {
+            "stroke": "none",
+            "fill": "#000000",
+            "fill-opacity": "0.1",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "c9b6961055a6ee1b",
+            "fd17c5b4813e6c49",
+            "751ef5bac92f8a81",
+            "4c158b3acee18913",
+            "4ddc87e572d6ec3a",
+            "6837055cc88c1f7d"
+        ],
+        "x": 14,
+        "y": 39,
+        "w": 1132,
+        "h": 122
+    },
+    {
+        "id": "c9b6961055a6ee1b",
+        "type": "debug",
+        "z": "90b99d3a1e88b8fb",
+        "g": "144a8ea04ca059da",
+        "name": "hue event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 120,
+        "wires": []
+    },
+    {
         "id": "fd17c5b4813e6c49",
         "type": "change",
         "z": "90b99d3a1e88b8fb",
-        "name": "",
+        "g": "144a8ea04ca059da",
+        "name": "set evensource parameters",
         "rules": [
             {
                 "t": "set",
@@ -137,8 +204,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 740,
-        "y": 140,
+        "x": 340,
+        "y": 120,
         "wires": [
             [
                 "6837055cc88c1f7d"
@@ -149,6 +216,7 @@
         "id": "751ef5bac92f8a81",
         "type": "inject",
         "z": "90b99d3a1e88b8fb",
+        "g": "144a8ea04ca059da",
         "name": "",
         "props": [
             {
@@ -162,8 +230,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 560,
-        "y": 100,
+        "x": 120,
+        "y": 80,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -174,12 +242,13 @@
         "id": "4c158b3acee18913",
         "type": "json",
         "z": "90b99d3a1e88b8fb",
+        "g": "144a8ea04ca059da",
         "name": "",
         "property": "payload",
         "action": "obj",
         "pretty": false,
-        "x": 1250,
-        "y": 140,
+        "x": 910,
+        "y": 120,
         "wires": [
             [
                 "c9b6961055a6ee1b"
@@ -190,7 +259,8 @@
         "id": "4ddc87e572d6ec3a",
         "type": "change",
         "z": "90b99d3a1e88b8fb",
-        "name": "",
+        "g": "144a8ea04ca059da",
+        "name": "get payload.data",
         "rules": [
             {
                 "t": "set",
@@ -205,8 +275,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1100,
-        "y": 140,
+        "x": 750,
+        "y": 120,
         "wires": [
             [
                 "4c158b3acee18913"
@@ -214,39 +284,13 @@
         ]
     },
     {
-        "id": "74f7e4116347d692",
-        "type": "change",
-        "z": "90b99d3a1e88b8fb",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "reset",
-                "pt": "msg",
-                "to": "true",
-                "tot": "bool"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 520,
-        "y": 240,
-        "wires": [
-            [
-                "588184a8aaa2d7a9"
-            ]
-        ]
-    },
-    {
         "id": "6837055cc88c1f7d",
         "type": "EventSource",
         "z": "90b99d3a1e88b8fb",
+        "g": "144a8ea04ca059da",
         "name": "Hue Bridge SSE",
-        "x": 920,
-        "y": 140,
+        "x": 560,
+        "y": 120,
         "wires": [
             [
                 "4ddc87e572d6ec3a"

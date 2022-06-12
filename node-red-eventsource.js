@@ -76,7 +76,6 @@ module.exports = function(RED) {
 
         node.es = null
         node.initDict = {}
-        setInterval(status, 1000)
 
         node.on('close', close)
 
