@@ -55,4 +55,18 @@ event messages asynchronously as they are sent by the server. The `status.text` 
 |  `0`          | The `eventsource.readyState` value indicating the client is attempting to connect to the server |
 |  `1`          | The `eventsource.readyState` value indicating the client is currently connected to the server   |
 |  `2`          | The `eventsource.readyState` value indicating the connection has failed                         |
+
+### Example Flows
+
+This package include three example flows:
+
+1. _hue-bridge-sse.json_
+2. _hue-bridge-sse-with-reconnect.json_
+3. _complete-example-for-philips-hue.json_
+
+The example flows are of increasing complexity, in the order listed above. All three will require modification to work in your environment. In particular, the payloads of the `change` nodes named _set eventsource parameters_ in the first two examples will have to be changed to use your bridge's IP address and your client access key. Similarly, the `ADDRESS` and `KEY` environment variables defined by the _Chez Nous Main_ flow in the _complete-example-for-philips-hue.json_ example will need to be changed to reflect your setup.
+
+#### (Not So) Complete Example
+
+The _complete-example-for-philips-hue.json_ example creates a set of flows and subflows which, colletively, allow sending rate-limited requests to the [Philips Hue Bridge API V2](https://developers.meethue.com/develop/hue-api-v2/) on one or more Hue bridges on your LAN. Despite the name, the "complete" example does not actually do anything with the SSE messages it receives. In the example, there is a `link out` node named _send to broker_ that is not connected to anything. In my actual home automation system, that links to a separate flow that sends rate-limited messages to a MQTT broker. Other flows act on those MQTT messages to update the state of dashboard controls, trigger automation etc.
 </script>
