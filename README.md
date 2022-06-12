@@ -1,6 +1,6 @@
 # @parasaurolophus/node-red-eventsource
 
-rap the [eventsource](https://github.com/EventSource/eventsource) package as a node.
+Wrap the [eventsource](https://github.com/EventSource/eventsource) package as a node.
 
 See <https://github.com/EventSource/eventsource#readme> and <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events> for details.
 
