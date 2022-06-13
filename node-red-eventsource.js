@@ -1,11 +1,11 @@
-module.exports = function(RED) {
+module.exports = function (RED) {
 
     const EventSource = require('eventsource')
-    const readyStateFill = ['yellow','green','red']
+    const readyStateFill = ['yellow', 'green', 'red']
 
     function eventsource(config) {
 
-        RED.nodes.createNode(this,config)
+        RED.nodes.createNode(this, config)
         var node = this
 
         function status() {
@@ -79,7 +79,7 @@ module.exports = function(RED) {
 
         node.on('close', close)
 
-        node.on('input', function(msg) {
+        node.on('input', function (msg) {
 
             connect(msg)
 
