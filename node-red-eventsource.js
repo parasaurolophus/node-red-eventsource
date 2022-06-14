@@ -52,25 +52,30 @@ module.exports = function (RED) {
             node.url = msg.payload.url
 
             if (node.url === undefined) {
+
                 throw 'msg.payload.url not defined'
+
             }
 
             node.initDict = msg.payload.initDict || {}
             node.es = new EventSource(node.url, node.initDict)
 
             node.es.onopen = (event) => {
+
                 status()
+
             }
 
             node.es.onerror = (err) => {
+
                 status()
+
             }
 
             node.es.onmessage = (event) => {
-                status()
-                node.send({
-                    payload: event
-                })
+
+                node.send({ topic: 'message', payload: event })
+
             }
         }
 
