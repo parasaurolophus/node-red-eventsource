@@ -62,19 +62,21 @@ module.exports = function (RED) {
 
             node.es.onopen = (event) => {
 
+                node.send([null, { topic: 'open', payload: event }])
                 status()
 
             }
 
             node.es.onerror = (err) => {
 
+                node.send([null, { topic: 'error', payload: err }])
                 status()
 
             }
 
             node.es.onmessage = (event) => {
 
-                node.send({ topic: 'message', payload: event })
+                node.send([{ topic: 'message', payload: event }, null])
 
             }
         }
