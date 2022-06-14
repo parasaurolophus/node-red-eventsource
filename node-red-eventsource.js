@@ -59,6 +59,7 @@ module.exports = function (RED) {
 
             node.initDict = msg.payload.initDict || {}
             node.es = new EventSource(node.url, node.initDict)
+            status()
 
             node.es.onopen = (event) => {
 
