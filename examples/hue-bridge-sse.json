@@ -1,6 +1,6 @@
 [
     {
-        "id": "56d877f261cf7604",
+        "id": "cb2a4b773383e5a7",
         "type": "group",
         "z": "90b99d3a1e88b8fb",
         "name": "Subscribe to events sent by a Philips Hue bridge",
@@ -12,23 +12,24 @@
             "color": "#000000"
         },
         "nodes": [
-            "c9b6961055a6ee1b",
-            "fd17c5b4813e6c49",
-            "751ef5bac92f8a81",
-            "4c158b3acee18913",
-            "4ddc87e572d6ec3a",
-            "8947a09ac2a1d788"
+            "983c531ae51a1ff3",
+            "4e42bd22b2ac99e0",
+            "8e81deda9af100cb",
+            "fa7cc4292a0a132a",
+            "b8df4dd303f9d4ef",
+            "368ea8566bb684e7",
+            "d662c50da3581a75"
         ],
         "x": 34,
-        "y": 59,
+        "y": 39,
         "w": 1112,
-        "h": 82
+        "h": 149.5
     },
     {
-        "id": "c9b6961055a6ee1b",
+        "id": "983c531ae51a1ff3",
         "type": "debug",
         "z": "90b99d3a1e88b8fb",
-        "g": "56d877f261cf7604",
+        "g": "cb2a4b773383e5a7",
         "name": "hue event",
         "active": true,
         "tosidebar": true,
@@ -39,14 +40,14 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1040,
-        "y": 100,
+        "y": 140,
         "wires": []
     },
     {
-        "id": "fd17c5b4813e6c49",
+        "id": "4e42bd22b2ac99e0",
         "type": "change",
         "z": "90b99d3a1e88b8fb",
-        "g": "56d877f261cf7604",
+        "g": "cb2a4b773383e5a7",
         "name": "set eventsource parameters",
         "rules": [
             {
@@ -63,18 +64,18 @@
         "to": "",
         "reg": false,
         "x": 340,
-        "y": 100,
+        "y": 140,
         "wires": [
             [
-                "8947a09ac2a1d788"
+                "368ea8566bb684e7"
             ]
         ]
     },
     {
-        "id": "751ef5bac92f8a81",
+        "id": "8e81deda9af100cb",
         "type": "inject",
         "z": "90b99d3a1e88b8fb",
-        "g": "56d877f261cf7604",
+        "g": "cb2a4b773383e5a7",
         "name": "",
         "props": [
             {
@@ -89,35 +90,35 @@
         "payload": "",
         "payloadType": "date",
         "x": 140,
-        "y": 100,
+        "y": 140,
         "wires": [
             [
-                "fd17c5b4813e6c49"
+                "4e42bd22b2ac99e0"
             ]
         ]
     },
     {
-        "id": "4c158b3acee18913",
+        "id": "fa7cc4292a0a132a",
         "type": "json",
         "z": "90b99d3a1e88b8fb",
-        "g": "56d877f261cf7604",
+        "g": "cb2a4b773383e5a7",
         "name": "",
         "property": "payload",
         "action": "obj",
         "pretty": false,
         "x": 910,
-        "y": 100,
+        "y": 140,
         "wires": [
             [
-                "c9b6961055a6ee1b"
+                "983c531ae51a1ff3"
             ]
         ]
     },
     {
-        "id": "4ddc87e572d6ec3a",
+        "id": "b8df4dd303f9d4ef",
         "type": "change",
         "z": "90b99d3a1e88b8fb",
-        "g": "56d877f261cf7604",
+        "g": "cb2a4b773383e5a7",
         "name": "get payload.data",
         "rules": [
             {
@@ -134,25 +135,38 @@
         "to": "",
         "reg": false,
         "x": 750,
-        "y": 100,
+        "y": 140,
         "wires": [
             [
-                "4c158b3acee18913"
+                "fa7cc4292a0a132a"
             ]
         ]
     },
     {
-        "id": "8947a09ac2a1d788",
+        "id": "368ea8566bb684e7",
         "type": "EventSource",
         "z": "90b99d3a1e88b8fb",
-        "g": "56d877f261cf7604",
+        "g": "cb2a4b773383e5a7",
         "name": "Hue Bridge SSE",
         "x": 560,
-        "y": 100,
+        "y": 140,
         "wires": [
             [
-                "4ddc87e572d6ec3a"
-            ]
+                "b8df4dd303f9d4ef"
+            ],
+            [],
+            []
         ]
+    },
+    {
+        "id": "d662c50da3581a75",
+        "type": "comment",
+        "z": "90b99d3a1e88b8fb",
+        "g": "cb2a4b773383e5a7",
+        "name": "Change parameters to match your bridge",
+        "info": "",
+        "x": 380,
+        "y": 80,
+        "wires": []
     }
 ]

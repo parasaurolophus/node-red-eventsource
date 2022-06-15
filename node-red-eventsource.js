@@ -1,7 +1,7 @@
 module.exports = function (RED) {
 
     const EventSource = require('eventsource')
-    const readyStateFill = ['yellow', 'green', 'red']
+    const statusFill = ['gray', 'yellow', 'green', 'red']
 
     function eventsource(config) {
 
@@ -10,80 +10,95 @@ module.exports = function (RED) {
 
         function status() {
 
-            if (node.es) {
+            const lastStatus = node.lastStatus || -2
+            const currentStatus = node.es ? node.es.readyState : -1
 
-                const fill = Math.min(readyStateFill.length - 1, Math.max(0, node.es.readyState))
+
+            if (currentStatus != lastStatus) {
 
                 node.status({
-                    text: node.es.readyState,
+                    text: currentStatus,
                     shape: 'dot',
-                    fill: readyStateFill[fill]
+                    fill: statusFill[currentStatus + 1]
                 })
 
-            } else {
-
-                node.status({
-                    text: -1,
-                    shape: 'ring',
-                    fill: 'gray'
-                })
+                node.lastStatus = currentStatus
 
             }
+
+            if (currentStatus == 2 && node.onclosed) {
+
+                node.onclosed()
+                node.onclosed = null
+
+            }
+        }
+
+        function init() {
+
+            node.es = null
+            node.initDict = {}
+            node.lastStatus = -2
+            node.onclosed = null
 
         }
 
-        function close() {
+        function close(_removed, done) {
 
-            if (node.es) {
+            try {
 
-                node.es.close()
-                node.es = null
-                node.initDict = {}
+                if (node.es) {
 
+                    node.es.close()
+                    node.onclosed = done
+
+                }
+
+            } finally {
+
+                if (done) {
+
+                    done()
+
+                }
             }
-
-            status()
-
         }
 
         function connect(msg) {
 
-            close()
-            node.url = msg.payload.url
+            close(false, null)
 
-            if (node.url === undefined) {
+            if ((typeof msg.payload) == 'object' && msg.payload.url !== undefined) {
 
-                throw 'msg.payload.url not defined'
-
-            }
-
-            node.initDict = msg.payload.initDict || {}
-            node.es = new EventSource(node.url, node.initDict)
-            status()
-
-            node.es.onopen = (event) => {
-
-                node.send([null, { topic: 'open', payload: event }])
+                node.url = msg.payload.url
+                node.initDict = msg.payload.initDict || {}
+                node.es = new EventSource(node.url, node.initDict)
                 status()
 
-            }
+                node.es.onopen = (evt) => {
 
-            node.es.onerror = (err) => {
+                    node.send([null, { topic: 'open', payload: evt }, null])
+                    status()
 
-                node.send([null, { topic: 'error', payload: err }])
-                status()
+                }
 
-            }
+                node.es.onerror = (err) => {
 
-            node.es.onmessage = (event) => {
+                    node.send([null, null, { topic: 'error', payload: err }])
+                    status()
 
-                node.send([{ topic: 'message', payload: event }, null])
+                }
 
+                node.es.onmessage = (event) => {
+
+                    node.send([{ topic: 'message', payload: event }, null, null])
+
+                }
             }
         }
 
-        node.es = null
-        node.initDict = {}
+        init()
+        setInterval(status, 1000)
 
         node.on('close', close)
 

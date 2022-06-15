@@ -18,8 +18,8 @@
             "caf5324dced3d7bc",
             "0be4f5d4391afc3c"
         ],
-        "x": 14,
-        "y": 179,
+        "x": 94,
+        "y": 259,
         "w": 952,
         "h": 82
     },
@@ -32,8 +32,8 @@
         "scope": [
             "6837055cc88c1f7d"
         ],
-        "x": 140,
-        "y": 220,
+        "x": 220,
+        "y": 300,
         "wires": [
             [
                 "caf5324dced3d7bc"
@@ -58,8 +58,8 @@
         "checkall": "false",
         "repair": false,
         "outputs": 1,
-        "x": 700,
-        "y": 220,
+        "x": 780,
+        "y": 300,
         "wires": [
             [
                 "588184a8aaa2d7a9"
@@ -84,8 +84,8 @@
         "bytopic": "all",
         "topic": "topic",
         "outputs": 1,
-        "x": 870,
-        "y": 220,
+        "x": 950,
+        "y": 300,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -105,8 +105,8 @@
         "septopics": false,
         "property": "status.text",
         "topi": "topic",
-        "x": 310,
-        "y": 220,
+        "x": 390,
+        "y": 300,
         "wires": [
             [
                 "0be4f5d4391afc3c"
@@ -133,8 +133,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 490,
-        "y": 220,
+        "x": 570,
+        "y": 300,
         "wires": [
             [
                 "1fa20e89a17e3be7"
@@ -159,12 +159,13 @@
             "751ef5bac92f8a81",
             "4c158b3acee18913",
             "4ddc87e572d6ec3a",
-            "6837055cc88c1f7d"
+            "6837055cc88c1f7d",
+            "1d6cc2185ae37fe5"
         ],
-        "x": 14,
-        "y": 39,
+        "x": 94,
+        "y": 99,
         "w": 1132,
-        "h": 122
+        "h": 149.5
     },
     {
         "id": "c9b6961055a6ee1b",
@@ -180,8 +181,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1040,
-        "y": 120,
+        "x": 1120,
+        "y": 200,
         "wires": []
     },
     {
@@ -204,8 +205,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 340,
-        "y": 120,
+        "x": 420,
+        "y": 200,
         "wires": [
             [
                 "6837055cc88c1f7d"
@@ -230,8 +231,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
-        "y": 80,
+        "x": 200,
+        "y": 160,
         "wires": [
             [
                 "fd17c5b4813e6c49"
@@ -247,8 +248,8 @@
         "property": "payload",
         "action": "obj",
         "pretty": false,
-        "x": 910,
-        "y": 120,
+        "x": 990,
+        "y": 200,
         "wires": [
             [
                 "c9b6961055a6ee1b"
@@ -275,8 +276,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 750,
-        "y": 120,
+        "x": 830,
+        "y": 200,
         "wires": [
             [
                 "4c158b3acee18913"
@@ -289,12 +290,25 @@
         "z": "90b99d3a1e88b8fb",
         "g": "144a8ea04ca059da",
         "name": "Hue Bridge SSE",
-        "x": 560,
-        "y": 120,
+        "x": 640,
+        "y": 200,
         "wires": [
             [
                 "4ddc87e572d6ec3a"
-            ]
+            ],
+            [],
+            []
         ]
+    },
+    {
+        "id": "1d6cc2185ae37fe5",
+        "type": "comment",
+        "z": "90b99d3a1e88b8fb",
+        "g": "144a8ea04ca059da",
+        "name": "Change parameters to match your bridge",
+        "info": "",
+        "x": 460,
+        "y": 140,
+        "wires": []
     }
 ]
