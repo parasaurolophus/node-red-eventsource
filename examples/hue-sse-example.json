@@ -18,7 +18,7 @@
         ],
         "out": [
             {
-                "x": 1130,
+                "x": 950,
                 "y": 60,
                 "wires": [
                     {
@@ -38,7 +38,7 @@
             "state change messages"
         ],
         "status": {
-            "x": 1220,
+            "x": 1040,
             "y": 140,
             "wires": [
                 {
@@ -63,12 +63,12 @@
         "y": 100,
         "wires": [
             [
-                "a64322f54b124ade"
+                "e25a4fdb21a21977"
             ]
         ]
     },
     {
-        "id": "a64322f54b124ade",
+        "id": "e25a4fdb21a21977",
         "type": "change",
         "z": "3ee1b3ad7fcde523",
         "name": "",
@@ -79,27 +79,7 @@
                 "pt": "msg",
                 "to": "payload.type",
                 "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 590,
-        "y": 100,
-        "wires": [
-            [
-                "e25a4fdb21a21977"
-            ]
-        ]
-    },
-    {
-        "id": "e25a4fdb21a21977",
-        "type": "change",
-        "z": "3ee1b3ad7fcde523",
-        "name": "get payload.data",
-        "rules": [
+            },
             {
                 "t": "set",
                 "p": "payload",
@@ -113,7 +93,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 770,
+        "x": 600,
         "y": 100,
         "wires": [
             [
@@ -132,7 +112,7 @@
         "arraySpltType": "len",
         "stream": false,
         "addname": "",
-        "x": 930,
+        "x": 750,
         "y": 100,
         "wires": [
             [
@@ -159,7 +139,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1100,
+        "x": 920,
         "y": 140,
         "wires": [
             []
@@ -226,8 +206,8 @@
         "category": "",
         "in": [
             {
-                "x": 60,
-                "y": 120,
+                "x": 760,
+                "y": 40,
                 "wires": [
                     {
                         "id": "1724f1600d7ffa14"
@@ -237,8 +217,8 @@
         ],
         "out": [
             {
-                "x": 850,
-                "y": 120,
+                "x": 1250,
+                "y": 40,
                 "wires": [
                     {
                         "id": "fe6ae40ea7e35a88",
@@ -247,8 +227,8 @@
                 ]
             },
             {
-                "x": 820,
-                "y": 180,
+                "x": 1220,
+                "y": 100,
                 "wires": [
                     {
                         "id": "fe6ae40ea7e35a88",
@@ -257,8 +237,8 @@
                 ]
             },
             {
-                "x": 820,
-                "y": 240,
+                "x": 1220,
+                "y": 160,
                 "wires": [
                     {
                         "id": "fe6ae40ea7e35a88",
@@ -290,8 +270,8 @@
             "onerror"
         ],
         "status": {
-            "x": 400,
-            "y": 480,
+            "x": 280,
+            "y": 320,
             "wires": [
                 {
                     "id": "04c127db95a4aff1",
@@ -304,7 +284,6 @@
         "id": "1724f1600d7ffa14",
         "type": "change",
         "z": "cc4bb4e48182d9fb",
-        "g": "60d3e05b54523f79",
         "name": "close",
         "rules": [
             {
@@ -320,8 +299,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 450,
-        "y": 120,
+        "x": 850,
+        "y": 40,
         "wires": [
             [
                 "fe6ae40ea7e35a88"
@@ -332,7 +311,6 @@
         "id": "db22ddeab6fd2acc",
         "type": "function",
         "z": "cc4bb4e48182d9fb",
-        "g": "60d3e05b54523f79",
         "name": "atStart",
         "func": "\nreturn msg",
         "outputs": 1,
@@ -340,8 +318,8 @@
         "initialize": "setTimeout(() => {\n\n    node.send({ payload: true })\n\n}, 1000)",
         "finalize": "",
         "libs": [],
-        "x": 170,
-        "y": 200,
+        "x": 570,
+        "y": 120,
         "wires": [
             [
                 "f7ddcc7ce8914868"
@@ -352,7 +330,6 @@
         "id": "f7ddcc7ce8914868",
         "type": "change",
         "z": "cc4bb4e48182d9fb",
-        "g": "60d3e05b54523f79",
         "name": "set eventsource parameters",
         "rules": [
             {
@@ -368,23 +345,22 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 380,
-        "y": 240,
+        "x": 780,
+        "y": 160,
         "wires": [
             [
                 "fe6ae40ea7e35a88"
             ]
         ],
-        "info": "| Env Var     | Example                      | Description                                          |\n|-------------|------------------------------|------------------------------------------------------|\n| `URL`       | `https://192.168.1.42:8080/` | SSE server URL                                       |\n| `INIT_DICT` | `{\"withCredentials\":true}`   | Second parameter to `new EventSource(url, initDict)` |\n\nSee:\n\n- <https://developers.meethue.com/develop/hue-api-v2/core-concepts/#events>\n\n- <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>\n\n- <https://github.com/EventSource/eventsource>"
+        "info": "Sets `msg.payload` to the result of the following JSONata expression:\n\n    {\n        \"url\":$env('URL'),\n        \"initDict\":$env('INIT_DICT')\n    }\n\nwhere:\n\n| Env Var     | Example                      | Description                                          |\n|-------------|------------------------------|------------------------------------------------------|\n| `URL`       | `https://192.168.1.42:8080/` | SSE server URL                                       |\n| `INIT_DICT` | `{\"withCredentials\":true}`   | Second parameter to `new EventSource(url, initDict)` |\n\nSee:\n\n- <https://developers.meethue.com/develop/hue-api-v2/core-concepts/#events>\n\n- <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>\n\n- <https://github.com/EventSource/eventsource>"
     },
     {
         "id": "fe6ae40ea7e35a88",
         "type": "EventSource",
         "z": "cc4bb4e48182d9fb",
-        "g": "60d3e05b54523f79",
         "name": "",
-        "x": 630,
-        "y": 180,
+        "x": 1030,
+        "y": 100,
         "wires": [
             [],
             [],
@@ -395,13 +371,12 @@
         "id": "04c127db95a4aff1",
         "type": "status",
         "z": "cc4bb4e48182d9fb",
-        "g": "41ed66373e512463",
         "name": "EventSource status",
         "scope": [
             "fe6ae40ea7e35a88"
         ],
-        "x": 210,
-        "y": 380,
+        "x": 130,
+        "y": 280,
         "wires": [
             [
                 "d22ed9cfdbd668f2"
@@ -412,7 +387,6 @@
         "id": "d22ed9cfdbd668f2",
         "type": "switch",
         "z": "cc4bb4e48182d9fb",
-        "g": "41ed66373e512463",
         "name": "equals 2?",
         "property": "status.text",
         "propertyType": "msg",
@@ -429,8 +403,8 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "x": 400,
-        "y": 360,
+        "x": 320,
+        "y": 240,
         "wires": [
             [
                 "df1bd16bea8577ca"
@@ -444,7 +418,6 @@
         "id": "df1bd16bea8577ca",
         "type": "trigger",
         "z": "cc4bb4e48182d9fb",
-        "g": "41ed66373e512463",
         "name": "",
         "op1": "",
         "op2": "true",
@@ -458,8 +431,8 @@
         "bytopic": "all",
         "topic": "topic",
         "outputs": 1,
-        "x": 770,
-        "y": 360,
+        "x": 550,
+        "y": 200,
         "wires": [
             [
                 "f7ddcc7ce8914868"
@@ -472,7 +445,7 @@
         "z": "cc4bb4e48182d9fb",
         "name": "Set URL and INIT_DICT environment variables",
         "info": "See `info` tab for the `change` node named _set eventsource parameters_.",
-        "x": 280,
+        "x": 220,
         "y": 40,
         "wires": []
     },
@@ -480,7 +453,6 @@
         "id": "831a2bdefee18530",
         "type": "change",
         "z": "cc4bb4e48182d9fb",
-        "g": "41ed66373e512463",
         "name": "",
         "rules": [
             {
@@ -496,8 +468,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 580,
-        "y": 400,
+        "x": 500,
+        "y": 280,
         "wires": [
             [
                 "df1bd16bea8577ca"
