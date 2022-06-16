@@ -1,6 +1,6 @@
 {
   "name": "@parasaurolophus/node-red-eventsource",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Wrap eventsource package as a node",
   "repository": "github:parasaurolophus/node-red-eventsource",
   "scripts": {
@@ -17,6 +17,7 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
+    "async-mutex": "^0.3.2",
     "eventsource": "^2.0.2"
   },
   "node-red": {

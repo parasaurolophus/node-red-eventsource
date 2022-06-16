@@ -10,7 +10,13 @@
  */
 module.exports = function (RED) {
 
-    const EventSource = require('eventsource')
+    var EventSource = require('eventsource')
+    var Mutex = require('async-mutex').Mutex
+
+    /**
+     * Protect node state
+     */
+    const mutex = new Mutex()
 
     /**
      * Color names for `node.status({text: ... fill: ...})`
@@ -40,28 +46,37 @@ module.exports = function (RED) {
          * As a side-effect, fire node.onclosed callback when
          * `eventsource.readyState` reaches 2.
          */
-        function status() {
+        async function status() {
 
-            const lastStatus = node.lastStatus || -2
-            const currentStatus = node.es ? node.es.readyState : -1
+            const release = await mutex.acquire()
 
+            try {
 
-            if (currentStatus != lastStatus) {
+                const lastStatus = node.lastStatus || -2
+                const currentStatus = node.es ? node.es.readyState : -1
 
-                node.status({
-                    text: currentStatus,
-                    shape: 'dot',
-                    fill: statusFill[currentStatus + 1]
-                })
+                if (currentStatus != lastStatus) {
 
-                node.lastStatus = currentStatus
+                    node.status({
+                        text: currentStatus,
+                        shape: 'dot',
+                        fill: statusFill[currentStatus + 1]
+                    })
 
-            }
+                    node.lastStatus = currentStatus
 
-            if (currentStatus == 2 && node.onclosed) {
+                }
 
-                node.onclosed()
-                node.onclosed = null
+                if (currentStatus == 2 && node.onclosed) {
+
+                    node.onclosed()
+                    node.onclosed = null
+
+                }
+
+            } finally {
+
+                release()
 
             }
         }
@@ -71,32 +86,44 @@ module.exports = function (RED) {
          * 
          * @param {*} msg Message containing connection parameters 
          */
-         function connect(msg) {
+        async function connect(msg) {
 
-            node.url = msg.payload.url
-            node.initDict = msg.payload.initDict || {}
-            node.es = new EventSource(node.url, node.initDict)
+            const release = await mutex.acquire()
+
+            try {
+
+                node.url = msg.payload.url
+                node.initDict = msg.payload.initDict || {}
+                node.es = new EventSource(node.url, node.initDict)
+
+                node.es.onopen = (evt) => {
+
+                    node.send([null, { topic: 'open', payload: evt }, null])
+                    status()
+
+                }
+
+                node.es.onerror = (err) => {
+
+                    node.send([null, null, { topic: 'error', payload: err }])
+                    status()
+
+                }
+
+                node.es.onmessage = (event) => {
+
+                    node.send([{ topic: 'message', payload: event }, null, null])
+
+                }
+
+            } finally {
+
+                release()
+
+            }
+
             status()
 
-            node.es.onopen = (evt) => {
-
-                node.send([null, { topic: 'open', payload: evt }, null])
-                status()
-
-            }
-
-            node.es.onerror = (err) => {
-
-                node.send([null, null, { topic: 'error', payload: err }])
-                status()
-
-            }
-
-            node.es.onmessage = (event) => {
-
-                node.send([{ topic: 'message', payload: event }, null, null])
-
-            }
         }
 
         /**
@@ -107,24 +134,31 @@ module.exports = function (RED) {
          * @param {*} done Callback to inform the runtime asynchronously that
          *                 the node is closed
          */
-        function close(_removed, done) {
+        async function close(_removed, done) {
+
+            const release = await mutex.acquire()
 
             try {
 
                 if (node.es) {
 
-                    node.es.close()
                     node.onclosed = done
+                    node.es.close()
 
+
+                } else {
+
+                    if (done) {
+
+                        done()
+
+                    }
                 }
 
             } finally {
 
-                if (done) {
+                release()
 
-                    done()
-
-                }
             }
         }
 
@@ -133,7 +167,7 @@ module.exports = function (RED) {
          * 
          * @param {*} msg The message to handle 
          */
-        function handleMessage(msg) {
+        async function handleMessage(msg) {
 
             // clean up current connection, if any
             close(false, null)
@@ -147,12 +181,10 @@ module.exports = function (RED) {
             }
         }
 
-        // initialize node to handle incoming messages
         node.es = null
         node.initDict = {}
         node.lastStatus = -2
         node.onclosed = null
-        setInterval(status, 1000)
 
         node.on('close', close)
 
@@ -161,6 +193,9 @@ module.exports = function (RED) {
             handleMessage(msg)
 
         })
+
+        setInterval(status, 1000)
+
     }
 
     RED.nodes.registerType("EventSource", eventsource)
