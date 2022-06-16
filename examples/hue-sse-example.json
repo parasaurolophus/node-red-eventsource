@@ -1,0 +1,635 @@
+[
+    {
+        "id": "3ee1b3ad7fcde523",
+        "type": "subflow",
+        "name": "Parse Hue Event",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "1dcf159bf6d07e8b"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1130,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "65c6bc4dd0fa1dc1",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "inputLabels": [
+            "server-sent event"
+        ],
+        "outputLabels": [
+            "state change messages"
+        ],
+        "status": {
+            "x": 1220,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "1aabe5a4510687a5",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "c735110e907270c8",
+        "type": "split",
+        "z": "3ee1b3ad7fcde523",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 450,
+        "y": 100,
+        "wires": [
+            [
+                "a64322f54b124ade"
+            ]
+        ]
+    },
+    {
+        "id": "a64322f54b124ade",
+        "type": "change",
+        "z": "3ee1b3ad7fcde523",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "payload.type",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 590,
+        "y": 100,
+        "wires": [
+            [
+                "e25a4fdb21a21977"
+            ]
+        ]
+    },
+    {
+        "id": "e25a4fdb21a21977",
+        "type": "change",
+        "z": "3ee1b3ad7fcde523",
+        "name": "get payload.data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.data",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 100,
+        "wires": [
+            [
+                "65c6bc4dd0fa1dc1"
+            ]
+        ]
+    },
+    {
+        "id": "65c6bc4dd0fa1dc1",
+        "type": "split",
+        "z": "3ee1b3ad7fcde523",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 930,
+        "y": 100,
+        "wires": [
+            [
+                "1aabe5a4510687a5"
+            ]
+        ]
+    },
+    {
+        "id": "1aabe5a4510687a5",
+        "type": "change",
+        "z": "3ee1b3ad7fcde523",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"text\":topic,\"shape\":\"dot\",\"fill\":\"blue\"}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1100,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "281d3e3e9ea7c8fe",
+        "type": "comment",
+        "z": "3ee1b3ad7fcde523",
+        "name": "Parse Hue API V2 server-sent event",
+        "info": "The Hue API V2 bundles state change messages for multiple \"resources\" into a single server-sent event. This subflow splits such a composite event into its constituent status messages\n\nConnect the output of a _Hue SSE_ subflow to the input of this one.\n\nSee <https://developers.meethue.com/develop/hue-api-v2/core-concepts/#events> for details.",
+        "x": 160,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "1dcf159bf6d07e8b",
+        "type": "change",
+        "z": "3ee1b3ad7fcde523",
+        "name": "get payload.data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.data",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 170,
+        "y": 100,
+        "wires": [
+            [
+                "d5ecf7432c57ae50"
+            ]
+        ]
+    },
+    {
+        "id": "d5ecf7432c57ae50",
+        "type": "json",
+        "z": "3ee1b3ad7fcde523",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "c735110e907270c8"
+            ]
+        ]
+    },
+    {
+        "id": "cc4bb4e48182d9fb",
+        "type": "subflow",
+        "name": "SSE",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "1724f1600d7ffa14"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 850,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "fe6ae40ea7e35a88",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 820,
+                "y": 180,
+                "wires": [
+                    {
+                        "id": "fe6ae40ea7e35a88",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 820,
+                "y": 240,
+                "wires": [
+                    {
+                        "id": "fe6ae40ea7e35a88",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "URL",
+                "type": "str",
+                "value": ""
+            },
+            {
+                "name": "INIT_DICT",
+                "type": "json",
+                "value": "{}"
+            }
+        ],
+        "meta": {},
+        "color": "#DDAA99",
+        "inputLabels": [
+            "close"
+        ],
+        "outputLabels": [
+            "server-sent event",
+            "onopen",
+            "onerror"
+        ],
+        "status": {
+            "x": 400,
+            "y": 480,
+            "wires": [
+                {
+                    "id": "04c127db95a4aff1",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "1724f1600d7ffa14",
+        "type": "change",
+        "z": "cc4bb4e48182d9fb",
+        "g": "60d3e05b54523f79",
+        "name": "close",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 450,
+        "y": 120,
+        "wires": [
+            [
+                "fe6ae40ea7e35a88"
+            ]
+        ]
+    },
+    {
+        "id": "db22ddeab6fd2acc",
+        "type": "function",
+        "z": "cc4bb4e48182d9fb",
+        "g": "60d3e05b54523f79",
+        "name": "atStart",
+        "func": "\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "setTimeout(() => {\n\n    node.send({ payload: true })\n\n}, 1000)",
+        "finalize": "",
+        "libs": [],
+        "x": 170,
+        "y": 200,
+        "wires": [
+            [
+                "f7ddcc7ce8914868"
+            ]
+        ]
+    },
+    {
+        "id": "f7ddcc7ce8914868",
+        "type": "change",
+        "z": "cc4bb4e48182d9fb",
+        "g": "60d3e05b54523f79",
+        "name": "set eventsource parameters",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"url\":$env('URL'),\"initDict\":$env('INIT_DICT')}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 240,
+        "wires": [
+            [
+                "fe6ae40ea7e35a88"
+            ]
+        ],
+        "info": "| Env Var     | Example                      | Description                                          |\n|-------------|------------------------------|------------------------------------------------------|\n| `URL`       | `https://192.168.1.42:8080/` | SSE server URL                                       |\n| `INIT_DICT` | `{\"withCredentials\":true}`   | Second parameter to `new EventSource(url, initDict)` |\n\nSee:\n\n- <https://developers.meethue.com/develop/hue-api-v2/core-concepts/#events>\n\n- <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>\n\n- <https://github.com/EventSource/eventsource>"
+    },
+    {
+        "id": "fe6ae40ea7e35a88",
+        "type": "EventSource",
+        "z": "cc4bb4e48182d9fb",
+        "g": "60d3e05b54523f79",
+        "name": "",
+        "x": 630,
+        "y": 180,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "04c127db95a4aff1",
+        "type": "status",
+        "z": "cc4bb4e48182d9fb",
+        "g": "41ed66373e512463",
+        "name": "EventSource status",
+        "scope": [
+            "fe6ae40ea7e35a88"
+        ],
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "d22ed9cfdbd668f2"
+            ]
+        ]
+    },
+    {
+        "id": "d22ed9cfdbd668f2",
+        "type": "switch",
+        "z": "cc4bb4e48182d9fb",
+        "g": "41ed66373e512463",
+        "name": "equals 2?",
+        "property": "status.text",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 400,
+        "y": 360,
+        "wires": [
+            [
+                "df1bd16bea8577ca"
+            ],
+            [
+                "831a2bdefee18530"
+            ]
+        ]
+    },
+    {
+        "id": "df1bd16bea8577ca",
+        "type": "trigger",
+        "z": "cc4bb4e48182d9fb",
+        "g": "41ed66373e512463",
+        "name": "",
+        "op1": "",
+        "op2": "true",
+        "op1type": "nul",
+        "op2type": "bool",
+        "duration": "10",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "1",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 770,
+        "y": 360,
+        "wires": [
+            [
+                "f7ddcc7ce8914868"
+            ]
+        ]
+    },
+    {
+        "id": "273b45dcc61dce3e",
+        "type": "comment",
+        "z": "cc4bb4e48182d9fb",
+        "name": "Set URL and INIT_DICT environment variables",
+        "info": "See `info` tab for the `change` node named _set eventsource parameters_.",
+        "x": 280,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "831a2bdefee18530",
+        "type": "change",
+        "z": "cc4bb4e48182d9fb",
+        "g": "41ed66373e512463",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 400,
+        "wires": [
+            [
+                "df1bd16bea8577ca"
+            ]
+        ]
+    },
+    {
+        "id": "90b99d3a1e88b8fb",
+        "type": "tab",
+        "label": "Hue SSE",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8799918eb410741a",
+        "type": "debug",
+        "z": "90b99d3a1e88b8fb",
+        "name": "server-sent event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "topic",
+        "statusType": "msg",
+        "x": 630,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "b77dc5fcc46046c5",
+        "type": "inject",
+        "z": "90b99d3a1e88b8fb",
+        "name": "close",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "7cdd06de5211bfe4"
+            ]
+        ]
+    },
+    {
+        "id": "f78fbaf73faaf7ef",
+        "type": "debug",
+        "z": "90b99d3a1e88b8fb",
+        "name": "eventsource open",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "topic",
+        "statusType": "msg",
+        "x": 430,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "faef62f533f1e309",
+        "type": "debug",
+        "z": "90b99d3a1e88b8fb",
+        "name": "eventsource error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "topic",
+        "statusType": "msg",
+        "x": 430,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7cdd06de5211bfe4",
+        "type": "subflow:cc4bb4e48182d9fb",
+        "z": "90b99d3a1e88b8fb",
+        "name": "",
+        "env": [
+            {
+                "name": "URL",
+                "value": "https://192.168.1.34/eventstream/clip/v2",
+                "type": "str"
+            },
+            {
+                "name": "INIT_DICT",
+                "value": "{\"withCredentials\":false,\"https\":{\"rejectUnauthorized\":false},\"headers\":{\"hue-application-key\":\"-6ay0JIz8Kd1PV00yBYQ75bo6hlVBN2mopvXnrNa\"}}",
+                "type": "json"
+            }
+        ],
+        "x": 230,
+        "y": 120,
+        "wires": [
+            [
+                "2dbd0b51f128c4e6"
+            ],
+            [
+                "f78fbaf73faaf7ef"
+            ],
+            [
+                "faef62f533f1e309"
+            ]
+        ]
+    },
+    {
+        "id": "2dbd0b51f128c4e6",
+        "type": "subflow:3ee1b3ad7fcde523",
+        "z": "90b99d3a1e88b8fb",
+        "name": "",
+        "x": 430,
+        "y": 60,
+        "wires": [
+            [
+                "8799918eb410741a"
+            ]
+        ]
+    }
+]
