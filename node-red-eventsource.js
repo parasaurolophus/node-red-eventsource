@@ -146,13 +146,10 @@ module.exports = function (RED) {
                     node.es.close()
 
 
-                } else {
+                } else if (done) {
 
-                    if (done) {
+                    done()
 
-                        done()
-
-                    }
                 }
 
             } finally {
@@ -167,7 +164,7 @@ module.exports = function (RED) {
          * 
          * @param {*} msg The message to handle 
          */
-        async function handleMessage(msg) {
+        function handleMessage(msg) {
 
             // clean up current connection, if any
             close(false, null)
@@ -180,6 +177,7 @@ module.exports = function (RED) {
 
             }
         }
+
 
         node.es = null
         node.initDict = {}
