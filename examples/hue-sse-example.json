@@ -359,6 +359,8 @@
         "type": "EventSource",
         "z": "cc4bb4e48182d9fb",
         "name": "",
+        "url": "",
+        "initDict": "{}",
         "x": 1030,
         "y": 100,
         "wires": [

@@ -7,7 +7,15 @@ See:
 - <https://github.com/EventSource/eventsource>
 - <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>
 
+### Properties
+
+_See the discussion of the `msg.payload.url` and `msg.payload.initDict` input message properties for a full discussion of the `url` and `initDict` properties in the node settings dialog. While setting these parameters in the node itself is supported, for most real world scenarios it is better to leave these empty and rely on passing messages into an `EventSource` node to control its state._
+
+If a URL is set in the node settings dialog, the node will attempt to connect automatically each time the flow is (re-)started. Such a node will still respond to messages sent to its input port as described in the next section.
+
 ### Inputs
+
+_Any parameters passed in an incoming message will override the corresponding parameters specified via the node's settings dialog._
 
 If `msg.payload` is an object with a `url` property and, optionally, an `initDict` property then this node uses `new EventSource(msg.payload.url, msg.payload.initDict)` to wrap a newly created `eventsource` instance. The `initDict` defaults to an empty object (`{}`) if it is not supplied in `msg.payload`.
 
@@ -47,6 +55,44 @@ The second output will emit the objects sent to the `EventSource.onopen` handler
 The third output will emit the objects sent to the `EventSource.onerror` handler. Each such object will have `msg.topic` set to `"error"` and `msg.payload` will be the value passed to the handler. See <https://github.com/EventSource/eventsource#http-status-code-on-error-events> for information on the payload content.
 
 ### Details
+
+```mermaid
+sequenceDiagram
+
+    autonumber
+
+    participant upstream as Upstream Flow
+    participant ev as EventSource Node
+    participant downstream as Downstream Flow
+    participant server as SSE server
+
+    alt URL specified in settings dialog
+        ev->>ev: new EventSource(url, initDict)
+    end
+
+    upstream->>ev: msg
+    activate ev
+    alt msg.payload.url
+        opt already connected
+            ev->>ev: close
+        end
+        ev->>ev: new EventSource(msg.payload.url, msg.payload.initDict)
+    else msg.payload not and object or msg.payload.url not defined
+        ev->>ev: close
+    end
+    ev-)downstream: onopen
+    deactivate ev
+
+    loop until closed
+        alt
+            note over ev: status will oscillate between 0 and 1 as connection is re-negotiated over time
+            activate ev
+            server-)ev: server-sent event
+            ev-)downstream: server-sent event
+            deactivate ev
+        end
+    end
+```
 
 This is a deliberately minimalist implementation of the protocol and JavaScript interface underlying the standard _EventSource_ feature available in modern web browsers. An aspect of the "minimalist" philoosophy is that an instance of `EventSource` wrapped by this node will automatically subscribe to and forward to the node's output **all** messages sent by the server, using an `EventSource.onmessage` handler. (In particular, it makes no attempt to expose the more fine grained `EventTarget.addEventListener(type, handler, ...)` interface.) To start receiving events, send a message with URL and configuration parameters in its payload as described above. The `EventSource` node will open a connection and begin emitting event messages asynchronously as they are sent by the server.
 

@@ -36,6 +36,37 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         var node = this
 
+        node.url = config.url || null
+        node.initDict = parseInitDict(config.initDict)
+        node.es = null
+        node.lastStatus = -2
+        node.onclosed = null
+
+        /**
+         * Parse the given JSON string
+         * 
+         * Log errors and return an empty object if parsing fails.
+         * 
+         * @param {*} initDict JSON string
+         *  
+         * @returns JavaScript object 
+         */
+        function parseInitDict(initDict) {
+
+            try {
+
+                return JSON.parse(initDict)
+
+            } catch (e) {
+
+                node.warn(e)
+
+            }
+
+            return {}
+
+        }
+
         /**
          * Called periodically to emit the current `eventsource.readyState`
          * as the node's status
@@ -84,16 +115,18 @@ module.exports = function (RED) {
         /**
          * Create a new wrapped `eventsource` instance
          * 
-         * @param {*} msg Message containing connection parameters 
+         * @param {*} url SSE server URL
+         * 
+         * @param {*} initDit `eventSourceInitDict` value
          */
-        async function connect(msg) {
+        async function connect(url, initDict) {
 
             const release = await mutex.acquire()
 
             try {
 
-                node.url = msg.payload.url
-                node.initDict = msg.payload.initDict || {}
+                node.url = url
+                node.initDict = initDict || {}
                 node.es = new EventSource(node.url, node.initDict)
 
                 node.es.onopen = (evt) => {
@@ -173,16 +206,10 @@ module.exports = function (RED) {
             // with a url property
             if ((typeof msg.payload) == 'object' && msg.payload.url !== undefined) {
 
-                connect(msg)
+                connect(msg.payload.url, msg.payload.initDict || {})
 
             }
         }
-
-
-        node.es = null
-        node.initDict = {}
-        node.lastStatus = -2
-        node.onclosed = null
 
         node.on('close', close)
 
@@ -192,8 +219,14 @@ module.exports = function (RED) {
 
         })
 
+
         setInterval(status, 1000)
 
+        if (node.url) {
+
+            connect(node.url, node.initDict)
+
+        }
     }
 
     RED.nodes.registerType("EventSource", eventsource)

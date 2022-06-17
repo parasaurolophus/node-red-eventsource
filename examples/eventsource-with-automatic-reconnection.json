@@ -2,7 +2,7 @@
     {
         "id": "c34a0c1d71668a90",
         "type": "debug",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "server-sent event",
         "active": true,
         "tosidebar": true,
@@ -12,14 +12,14 @@
         "targetType": "full",
         "statusVal": "topic",
         "statusType": "msg",
-        "x": 830,
-        "y": 140,
+        "x": 970,
+        "y": 220,
         "wires": []
     },
     {
         "id": "14207101e3d067cd",
         "type": "debug",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "eventsource open",
         "active": true,
         "tosidebar": true,
@@ -29,14 +29,14 @@
         "targetType": "full",
         "statusVal": "topic",
         "statusType": "msg",
-        "x": 830,
-        "y": 200,
+        "x": 970,
+        "y": 280,
         "wires": []
     },
     {
         "id": "d28835e01593a4f9",
         "type": "debug",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "eventsource error",
         "active": true,
         "tosidebar": true,
@@ -46,14 +46,14 @@
         "targetType": "full",
         "statusVal": "topic",
         "statusType": "msg",
-        "x": 830,
-        "y": 260,
+        "x": 970,
+        "y": 340,
         "wires": []
     },
     {
         "id": "462db5828410aade",
         "type": "inject",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "open",
         "props": [
             {
@@ -67,8 +67,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 110,
-        "y": 220,
+        "x": 250,
+        "y": 300,
         "wires": [
             [
                 "5047826b77e7d7c2"
@@ -78,7 +78,7 @@
     {
         "id": "1533ca1019b4d78c",
         "type": "inject",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "close",
         "props": [
             {
@@ -92,8 +92,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 410,
-        "y": 120,
+        "x": 550,
+        "y": 200,
         "wires": [
             [
                 "7773799974319a0b"
@@ -103,17 +103,17 @@
     {
         "id": "8e0507256fcc85b0",
         "type": "comment",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "Change EventSource parameters",
         "info": "See the _info_ tab for the `change` named _set eventsource parameters_ for information on making this example work with your SSE server.",
-        "x": 170,
-        "y": 60,
+        "x": 310,
+        "y": 140,
         "wires": []
     },
     {
         "id": "be0f6a1b8421287a",
         "type": "group",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "Attempt to reconnect when readyState is 2",
         "style": {
             "stroke": "none",
@@ -129,22 +129,22 @@
             "18637a1b048fc9df",
             "888fddef26e21e25"
         ],
-        "x": 194,
-        "y": 359,
+        "x": 334,
+        "y": 439,
         "w": 592,
         "h": 142
     },
     {
         "id": "72c57de057decadb",
         "type": "status",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "g": "be0f6a1b8421287a",
         "name": "EventSource status",
         "scope": [
             "7773799974319a0b"
         ],
-        "x": 310,
-        "y": 400,
+        "x": 450,
+        "y": 480,
         "wires": [
             [
                 "f7f18eaa400f60d8"
@@ -154,7 +154,7 @@
     {
         "id": "f7f18eaa400f60d8",
         "type": "switch",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "g": "be0f6a1b8421287a",
         "name": "equals 2?",
         "property": "status.text",
@@ -172,8 +172,8 @@
         "checkall": "false",
         "repair": false,
         "outputs": 2,
-        "x": 480,
-        "y": 400,
+        "x": 620,
+        "y": 480,
         "wires": [
             [
                 "18637a1b048fc9df"
@@ -186,7 +186,7 @@
     {
         "id": "18637a1b048fc9df",
         "type": "trigger",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "g": "be0f6a1b8421287a",
         "name": "",
         "op1": "",
@@ -201,8 +201,8 @@
         "bytopic": "all",
         "topic": "topic",
         "outputs": 1,
-        "x": 690,
-        "y": 400,
+        "x": 830,
+        "y": 480,
         "wires": [
             [
                 "5047826b77e7d7c2"
@@ -212,7 +212,7 @@
     {
         "id": "888fddef26e21e25",
         "type": "change",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "g": "be0f6a1b8421287a",
         "name": "",
         "rules": [
@@ -229,8 +229,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 580,
-        "y": 460,
+        "x": 720,
+        "y": 540,
         "wires": [
             [
                 "18637a1b048fc9df"
@@ -240,7 +240,7 @@
     {
         "id": "8359864186740399",
         "type": "group",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "name": "Connect to SSE server",
         "style": {
             "stroke": "none",
@@ -253,15 +253,15 @@
             "5047826b77e7d7c2",
             "7773799974319a0b"
         ],
-        "x": 194,
-        "y": 151.5,
+        "x": 334,
+        "y": 231.5,
         "w": 512,
         "h": 169.5
     },
     {
         "id": "5047826b77e7d7c2",
         "type": "change",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "g": "8359864186740399",
         "name": "set eventsource parameters",
         "rules": [
@@ -278,8 +278,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 340,
-        "y": 280,
+        "x": 480,
+        "y": 360,
         "wires": [
             [
                 "7773799974319a0b"
@@ -290,11 +290,13 @@
     {
         "id": "7773799974319a0b",
         "type": "EventSource",
-        "z": "15df666cb7c474a4",
+        "z": "17e76c971e0c1b78",
         "g": "8359864186740399",
         "name": "",
-        "x": 610,
-        "y": 200,
+        "url": "",
+        "initDict": "{}",
+        "x": 750,
+        "y": 280,
         "wires": [
             [
                 "c34a0c1d71668a90"

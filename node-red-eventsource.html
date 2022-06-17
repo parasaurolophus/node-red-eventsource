@@ -3,7 +3,15 @@
         category: 'network',
         color: '#E7E7AE',
         defaults: {
-            name: { value: "" }
+            name: { value: "" },
+            url: { value: "" },
+            initDict: { value: "{}" }
+        },
+        oneditprepare: function () {
+            $("#node-input-initDict").typedInput({
+                type: "json",
+                types: ["json"]
+            })
         },
         inputs: 1,
         outputs: 3,
@@ -12,7 +20,7 @@
             return this.name || "EventSource";
         },
         inputLabels: "eventsource constructor parameters",
-        outputLabels: ["sse", "onopen", "onerror"],
+        outputLabels: ["sse", "onopen", "onerror"]
     });
 </script>
 
@@ -20,6 +28,14 @@
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-url"><i class="fa fa-tag"></i> URL</label>
+        <input type="text" id="node-input-url" placeholder="http://localhost:8080/">
+    </div>
+    <div class="form-row">
+        <label for="node-input-initDict"><i class="fa fa-tag"></i> initDict</label>
+        <input type="text" id="node-input-initDict">
     </div>
 </script>
 
@@ -31,7 +47,15 @@ See:
 - <https://github.com/EventSource/eventsource>
 - <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>
 
+### Properties
+
+_See the discussion of the `msg.payload.url` and `msg.payload.initDict` input message properties for a full discussion of the `url` and `initDict` properties in the node settings dialog. While setting these parameters in the node itself is supported, for most real world scenarios it is better to leave these empty and rely on passing messages into an `EventSource` node to control its state._
+
+If a URL is set in the node settings dialog, the node will attempt to connect automatically each time the flow is (re-)started. Such a node will still respond to messages sent to its input port as described in the next section.
+
 ### Inputs
+
+_Any parameters passed in an incoming message will override the corresponding parameters specified via the node's settings dialog._
 
 If `msg.payload` is an object with a `url` property and, optionally, an `initDict` property then this node uses `new EventSource(msg.payload.url, msg.payload.initDict)` to wrap a newly created `eventsource` instance. The `initDict` defaults to an empty object (`{}`) if it is not supplied in `msg.payload`.
 
@@ -72,6 +96,44 @@ The third output will emit the objects sent to the `EventSource.onerror` handler
 
 ### Details
 
+```mermaid
+sequenceDiagram
+
+    autonumber
+
+    participant upstream as Upstream Flow
+    participant ev as EventSource Node
+    participant downstream as Downstream Flow
+    participant server as SSE server
+
+    alt URL specified in settings dialog
+        ev->>ev: new EventSource(url, initDict)
+    end
+
+    upstream->>ev: msg
+    activate ev
+    alt msg.payload.url
+        opt already connected
+            ev->>ev: close
+        end
+        ev->>ev: new EventSource(msg.payload.url, msg.payload.initDict)
+    else msg.payload not and object or msg.payload.url not defined
+        ev->>ev: close
+    end
+    ev-)downstream: onopen
+    deactivate ev
+
+    loop until closed
+        alt
+            note over ev: status will oscillate between 0 and 1 as connection is re-negotiated over time
+            activate ev
+            server-)ev: server-sent event
+            ev-)downstream: server-sent event
+            deactivate ev
+        end
+    end
+```
+
 This is a deliberately minimalist implementation of the protocol and JavaScript interface underlying the standard _EventSource_ feature available in modern web browsers. An aspect of the "minimalist" philoosophy is that an instance of `EventSource` wrapped by this node will automatically subscribe to and forward to the node's output **all** messages sent by the server, using an `EventSource.onmessage` handler. (In particular, it makes no attempt to expose the more fine grained `EventTarget.addEventListener(type, handler, ...)` interface.) To start receiving events, send a message with URL and configuration parameters in its payload as described above. The `EventSource` node will open a connection and begin emitting event messages asynchronously as they are sent by the server.
 
 The `status.text` of the `EventSource` node can be used to track the state of the connection:
@@ -84,6 +146,22 @@ The `status.text` of the `EventSource` node can be used to track the state of th
 |  `2`          | The `eventsource.readyState` value indicating the connection has failed                         |
 
 The `EventSource` node's status will oscillate between 0 and 1 as the wrapped `eventsource` instance attempts to stay connected. The `onopen` and `onerror` life-cycle messages described above are emitted along the way. If the status reaches 2, there will be no more attempts to reconnect automatically. You will need to send another `msg` to the `EventSource` node's input in order to resume receiving server-sent events.
+
+```mermaid
+stateDiagram-v2
+
+    connecting: connecting\n(readyState 0)
+    connected: connected\n(readyState 1)
+    closed: closed\n(readyState 2)
+
+    [*] --> connecting: new EventSource(msg.payload.url, msg.payload.initDict)\n(input with valid msg.payload)
+    connecting --> connected: eventsource.onopen\n(output 2)
+    note right of connected: server-sent events\nare forwarded while\nconnected (output 1)
+    connected --> connecting: eventsource.onerror\n(output 3)
+    connecting --> closed: eventsource.close()\n(input with invalid msg.payload)
+    connected --> closed: eventsource.close()\n(input with invalid msg.payload)
+    closed --> [*]
+```
 
 > _Note that you must use a `status` node to track the 'eventsource.readyState' values described above rather than relying on the life-cycle messages in order to capture the current state of the connection. Due to deficiencies in the SSE specification and limitations in the `eventsource` package implementation, the life-cycle messages are useful mainly to provide diagnostics for particular, known network connection issues. Even the node status, which reflects the value of the `eventsource.readyState` property on an ongoing basis, is not 100% reliable as an indicator that the connection to the SSE server is healthy. For really critical applications, it may be wise to include an additional watchdog timer on output 1. Such a watchdog timer would send a new message with valid connection parameters to the `EventSource` node's input if an unexpectedly long time elapses with no server-sent event messages being received. Since what counts as "an unexpectedly long time" is application-specific, it is left as an exercise for the reader to add such checks rather than trying to build one-size-fits all error recovery logic into this node to supplement that which is already provided by the wrapped `eventsource` library. Similarly, it might be possible to detect and diagnose infrastructure issues by use of the contents of the error life-cycle events emitted from output 3. Again, since the details of what such messages might contain and how to interpret them is somewhat dependent on a particular deployment, no attempt is made to bake-in any particular error detection or recovery logic._
 
