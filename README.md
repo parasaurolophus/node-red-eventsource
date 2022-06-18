@@ -132,10 +132,20 @@ stateDiagram-v2
 
 ### Example Flows
 
-There are three example flows provided in this package, of increasing complexity and completenes:
+There are four example flows provided in this package, of increasing complexity and completeness. You can watch the editor debug console panes while each is connected to a SSE server to see the `EventSource` node's status change to reflect the underlying `readyState` as well as the server-sent and life-cycle events it emits from its various outputs.
 
-1. _basic-eventsource-example.json_ consists of nothing but a single `EventSource` node with directly connected `inject` and `debug` nodes to let you experiment manually
+#### _basic-eventsource-example.json_
 
-2. _eventsource-with-automatic-reconnection.json_ builds on the first example by providing logic to detect when `eventsource.readyState` is 2 (`CLOSED`) and attempts automatically to reconnect
+A single `EventSource` node with `debug` nodes connected to each of its outputs and a single `inject` node to let you experiment with manually closing a connection. You will have to configure the `url` and `initDict` values in the `EventSource` node's settings dialog. Once configured, the `EventSource` node will attempt to connect to your SSE server each time the flow is started and attempt to stay connected until the `inject` node named "close" is activated.
 
-3. _hue-sse.json_ wraps the first example in a subflow and adds a second subflow that parses the specific server-side event format emitted by a [Philips Hue Bridge](https://developers.meethue.com/develop/hue-api-v2/core-concepts/#events)
+#### _dynamic-eventsource-example.json_
+
+A single `EventSource` node with `debug` nodes connected to each of its outputs and two `inject` nodes to let you experiment with manually opening and closing a connection. You will have to configure the `url` and `initDict` values in the `inject` node named "open." Once configured, the `EventSource` node will attempt to connect to your SSE server each time the `inject` node named "open" is activated and attempt to stay connected until the `inject` node named "close" is activated.
+
+#### _eventsource-with-automatic-reconnection.json_
+
+This example builds on the preceding one by providing logic to detect when `eventsource.readyState` is 2 (`CLOSED`) and attempts automatically to reconnect. Here, the `url` and `initDict` parameters are in a `change` node named `set eventsource parameters`. Once connected, activating the `inject` node named "close" will activate a `trigger` node. When the `trigger` times out, the `EventSource` node will be reopened. Note that the `trigger` node is configured to automatically reset if the `readyState` indicates a successful reconnection before it times out.
+
+#### _hue-sse.json_
+
+This example wraps the "automatic reconnect" example in a subflow and adds a second subflow that parses the specific server-side event format emitted by a [Philips Hue Bridge](https://developers.meethue.com/develop/hue-api-v2/core-concepts/#events). If you have such a device, edit the `url` and `initDict` in the `change` node named `set eventsource parameters` in the subflow named `SSE` and then watch the debug pane for server-sent events as you turn on and off lights, your sensors report motion, temperature, light-level etc. Note that this example includes logic to parse the bridge's rather tortured payload into streams of somewhat more meaningful messages, one per resource whose state is being reported. (Even then, a fair amount of work needs to be done on the client side to correlate the payloads of various server-sent events and direct API queries to provide a meaningful interface to the state a given bridge's configured devices and groups, but I digress....)
