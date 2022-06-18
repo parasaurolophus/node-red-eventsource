@@ -36,8 +36,8 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         var node = this
 
-        node.url = config.url || null
-        node.initDict = parseInitDict(config.initDict)
+        node.url = node.credentials.url || null
+        node.initDict = parseInitDict(node.credentials.initDict)
         node.es = null
         node.lastStatus = -2
         node.onclosed = null
@@ -53,14 +53,17 @@ module.exports = function (RED) {
          */
         function parseInitDict(initDict) {
 
-            try {
+            if (initDict && initDict != '') {
 
-                return JSON.parse(initDict)
+                try {
 
-            } catch (e) {
+                    return JSON.parse(initDict)
 
-                node.warn(e)
+                } catch (e) {
 
+                    node.warn(e)
+
+                }
             }
 
             return {}
@@ -229,6 +232,14 @@ module.exports = function (RED) {
         }
     }
 
-    RED.nodes.registerType("EventSource", eventsource)
+    RED.nodes.registerType(
+        "EventSource",
+        eventsource,
+        {
+            credentials: {
+                url: { type: "text" },
+                initDict: { type: "text" }
+            }
+        })
 
 }

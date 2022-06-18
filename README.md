@@ -2,14 +2,19 @@
 
 Wrap the [eventsource](https://github.com/EventSource/eventsource) package as a node.
 
+Used by a personal home automation flow: <https://github.com/parasaurolophus/waubesa>
+
 See:
 
 - <https://github.com/EventSource/eventsource>
 - <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>
+- <https://github.com/parasaurolophus/waubesa>
 
 ### Properties
 
 _See the discussion of the `msg.payload.url` and `msg.payload.initDict` input message properties for a full discussion of the `url` and `initDict` properties in the node settings dialog. While setting these parameters in the node itself is supported, for most real world scenarios it is better to leave these empty and rely on passing messages into an `EventSource` node to control its state._
+
+_Note also that the `url` and `initDict` properties are stored as encrypted credentials since they often contain sensitive information such as precise entity id's, access tokens and the like. This means that once set, they will be saved and restored when the flow is restarted but they will not be included when flows and subflows are exported. You can safely store flows that contain such configured nodes in a public version control repository, share flow snippets in wikis and fora and so on._
 
 If a URL is set in the node settings dialog, the node will attempt to connect automatically each time the flow is (re-)started. Such a node will still respond to messages sent to its input port as described in the next section.
 
