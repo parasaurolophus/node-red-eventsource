@@ -2,9 +2,9 @@
     {
         "id": "75bc72a16c4da2c8",
         "type": "subflow",
-        "name": "Create Hue Access Token",
+        "name": "Create Hue Application Key",
         "info": "# Overview\n\nInvoke the Hue Bridge API to create a client access token.\n\n_**N.B.:** Invoke this subflow within 30 seconds of pressing the button on top of the bridge. Watch the debug console output to see the response. If successful, you will see the generated key among the response payload's properties._\n\nSee <https://developers.meethue.com/develop/hue-api-v2/getting-started/> for details.\n\n# Configuration\n\n| Environment Variable | Description                                    |\n|----------------------|------------------------------------------------|\n|`ADDRESS`             | Bridge's IP address                            |\n| `USERNAME`           | \"User name\" for which a key is being generated |\n\n# Input\n\nIncoming message triggers HTTP request but is otherwise ignored.\n\n# Output\n\nThe HTTP response will be sent as a parsed JSON object. If successful, look for the value of the `msg.payload.success.username` property in the output. That is the string you should use as the access token header in all subsequent Hue Bridge API request messages.",
-        "category": "hue",
+        "category": "",
         "in": [
             {
                 "x": 40,
@@ -31,8 +31,8 @@
         "env": [
             {
                 "name": "ADDRESS",
-                "type": "env",
-                "value": "ADDRESS"
+                "type": "str",
+                "value": ""
             },
             {
                 "name": "USERNAME",
@@ -41,11 +41,11 @@
             }
         ],
         "meta": {
-            "module": "@parasaurolophus/node-red-subflow-create-hue-access-token",
-            "type": "subflow-create-hue-access-token",
+            "module": "@parasaurolophus/node-red-create-hue-application-key",
+            "type": "create-hue-application-key",
             "version": "1.0.0",
             "author": "parasaurolophus <apps@rader.us>",
-            "desc": "Invoke the Hue Bridge API for registering a client",
+            "desc": "Invoke the Hue Bridge API that creates an \"application key\"",
             "keywords": "philips,hue",
             "license": "MIT"
         },
@@ -180,7 +180,15 @@
                 "value": "TOPIC"
             }
         ],
-        "meta": {},
+        "meta": {
+            "module": "@parasaurolophus/node-red-parse-hue-event",
+            "type": "parse-hue-event",
+            "version": "1.0.0",
+            "author": "parasaurolophus <apps@rader.us>",
+            "desc": "Split a SSE message sent by a Philips Hue bridge into its individual status update messages",
+            "keywords": "philips,hue,sse",
+            "license": "MIT"
+        },
         "color": "#AA77AA",
         "icon": "font-awesome/fa-lightbulb-o",
         "status": {
@@ -405,7 +413,15 @@
                 "value": "KEY"
             }
         ],
-        "meta": {},
+        "meta": {
+            "module": "@parasaurolophus/node-red-hue-sse-parameters",
+            "type": "hue-sse-parameters",
+            "version": "1.0.0",
+            "author": "parasaurolophus <apps@rader.us>",
+            "desc": "Send a message when the flow starts containing SSE connection parameters for a Philips Hue Bridge",
+            "keywords": "philips,hue,sse",
+            "license": "MIT"
+        },
         "color": "#AA77AA",
         "icon": "font-awesome/fa-lightbulb-o",
         "status": {
@@ -875,7 +891,7 @@
         ]
     },
     {
-        "id": "41eb33bc1590a65b",
+        "id": "be726339755d3c26",
         "type": "tab",
         "label": "Automatic Reconnect",
         "disabled": false,
@@ -883,9 +899,9 @@
         "env": []
     },
     {
-        "id": "b1eb1672c18d7aa3",
+        "id": "9ac80b23dbfe246e",
         "type": "group",
-        "z": "41eb33bc1590a65b",
+        "z": "be726339755d3c26",
         "name": "EventSource with watchdog timer",
         "style": {
             "stroke": "none",
@@ -895,12 +911,12 @@
             "color": "#000000"
         },
         "nodes": [
-            "43ca9f583015d21d",
-            "0798d084c1cd6ae2",
-            "cded6aa8676ba22c",
-            "742af51103345391",
-            "dcbd94d1686f27b1",
-            "1ba7a6238c90dc2b"
+            "9035761b96a49b78",
+            "c83de2df7ce6ce2b",
+            "e61fe209dfd74358",
+            "2c0929cd88a28b21",
+            "023a075a2648d638",
+            "1753bf161389c944"
         ],
         "env": [
             {
@@ -926,10 +942,10 @@
         "info": "The `Server-Sent Events` subflow wraps an `EventSource` node. It adds a watchdog timer to keep the connection alive."
     },
     {
-        "id": "5b9dc830698d4430",
+        "id": "f03deeed35ea4ed9",
         "type": "group",
-        "z": "41eb33bc1590a65b",
-        "name": "Use this to obtain a client access token",
+        "z": "be726339755d3c26",
+        "name": "Use this to obtain a client access token if you don't already have one",
         "style": {
             "stroke": "none",
             "fill": "#ff0000",
@@ -938,10 +954,10 @@
             "color": "#ff0000"
         },
         "nodes": [
-            "497b08f40cd0b29c",
-            "7639b738a201d7c6",
-            "9bcb520fd937694d",
-            "7221ee23d0820fe0"
+            "ed153191fc9042e0",
+            "f7cab6ed93a25248",
+            "7ef02fa56e5eb04a",
+            "259bdd5d7d984d09"
         ],
         "env": [
             {
@@ -957,63 +973,63 @@
         ],
         "x": 34,
         "y": 259,
-        "w": 652,
+        "w": 672,
         "h": 142,
         "info": "Use this to create a security token for accessing your bridge's API if you do not already have one. See <https://developers.meethue.com/develop/hue-api-v2/getting-started/> for details."
     },
     {
-        "id": "43ca9f583015d21d",
+        "id": "9035761b96a49b78",
         "type": "subflow:2ab2fba24f042008",
-        "z": "41eb33bc1590a65b",
-        "g": "b1eb1672c18d7aa3",
+        "z": "be726339755d3c26",
+        "g": "9ac80b23dbfe246e",
         "name": "",
         "x": 370,
         "y": 120,
         "wires": [
             [
-                "cded6aa8676ba22c"
+                "e61fe209dfd74358"
             ],
             [
-                "742af51103345391"
+                "2c0929cd88a28b21"
             ],
             [
-                "742af51103345391"
+                "2c0929cd88a28b21"
             ]
         ]
     },
     {
-        "id": "0798d084c1cd6ae2",
+        "id": "c83de2df7ce6ce2b",
         "type": "subflow:1ab3d084034d545a",
-        "z": "41eb33bc1590a65b",
-        "g": "b1eb1672c18d7aa3",
+        "z": "be726339755d3c26",
+        "g": "9ac80b23dbfe246e",
         "name": "",
         "x": 160,
         "y": 120,
         "wires": [
             [
-                "43ca9f583015d21d"
+                "9035761b96a49b78"
             ]
         ]
     },
     {
-        "id": "cded6aa8676ba22c",
+        "id": "e61fe209dfd74358",
         "type": "subflow:4db3df0930ef9d8f",
-        "z": "41eb33bc1590a65b",
-        "g": "b1eb1672c18d7aa3",
+        "z": "be726339755d3c26",
+        "g": "9ac80b23dbfe246e",
         "name": "",
         "x": 610,
         "y": 80,
         "wires": [
             [
-                "1ba7a6238c90dc2b"
+                "1753bf161389c944"
             ]
         ]
     },
     {
-        "id": "742af51103345391",
+        "id": "2c0929cd88a28b21",
         "type": "change",
-        "z": "41eb33bc1590a65b",
-        "g": "b1eb1672c18d7aa3",
+        "z": "be726339755d3c26",
+        "g": "9ac80b23dbfe246e",
         "name": "",
         "rules": [
             {
@@ -1047,15 +1063,15 @@
         "y": 160,
         "wires": [
             [
-                "1ba7a6238c90dc2b"
+                "1753bf161389c944"
             ]
         ]
     },
     {
-        "id": "dcbd94d1686f27b1",
+        "id": "023a075a2648d638",
         "type": "comment",
-        "z": "41eb33bc1590a65b",
-        "g": "b1eb1672c18d7aa3",
+        "z": "be726339755d3c26",
+        "g": "9ac80b23dbfe246e",
         "name": "Set group's environment variables",
         "info": "Change the environment variables defined by this group to match your Hue Bridge configuration:\n\n| Env Var   | Description                   |\n|-----------|-------------------------------|\n| `ADDRESS` | IP address of your Hue bridge |\n| `KEY`     | Client access token           |\n| `TOPIC`   | Base MQTT topic prefix        |",
         "x": 200,
@@ -1063,10 +1079,10 @@
         "wires": []
     },
     {
-        "id": "497b08f40cd0b29c",
+        "id": "ed153191fc9042e0",
         "type": "inject",
-        "z": "41eb33bc1590a65b",
-        "g": "5b9dc830698d4430",
+        "z": "be726339755d3c26",
+        "g": "f03deeed35ea4ed9",
         "name": "",
         "props": [
             {
@@ -1084,37 +1100,16 @@
         "y": 300,
         "wires": [
             [
-                "7639b738a201d7c6"
+                "259bdd5d7d984d09"
             ]
         ]
     },
     {
-        "id": "7639b738a201d7c6",
-        "type": "subflow:75bc72a16c4da2c8",
-        "z": "41eb33bc1590a65b",
-        "g": "5b9dc830698d4430",
-        "name": "",
-        "env": [
-            {
-                "name": "USERNAME",
-                "value": "USERNAME",
-                "type": "env"
-            }
-        ],
-        "x": 330,
-        "y": 300,
-        "wires": [
-            [
-                "9bcb520fd937694d"
-            ]
-        ]
-    },
-    {
-        "id": "9bcb520fd937694d",
+        "id": "f7cab6ed93a25248",
         "type": "debug",
-        "z": "41eb33bc1590a65b",
-        "g": "5b9dc830698d4430",
-        "name": "hue access token",
+        "z": "be726339755d3c26",
+        "g": "f03deeed35ea4ed9",
+        "name": "hue application key",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -1123,15 +1118,15 @@
         "targetType": "full",
         "statusVal": "payload[0].success.username",
         "statusType": "msg",
-        "x": 550,
+        "x": 570,
         "y": 300,
         "wires": []
     },
     {
-        "id": "7221ee23d0820fe0",
+        "id": "7ef02fa56e5eb04a",
         "type": "comment",
-        "z": "41eb33bc1590a65b",
-        "g": "5b9dc830698d4430",
+        "z": "be726339755d3c26",
+        "g": "f03deeed35ea4ed9",
         "name": "Set group's environment variables",
         "info": "Change the environment variables defined by this group to match your Hue Bridge configuration:\n\n| Env Var    | Description                                  |\n|------------|----------------------------------------------|\n| `ADDRESS`  | IP address of your Hue bridge                |\n| `USERNAME` | User name for which a key is to be generated |\n",
         "x": 200,
@@ -1139,10 +1134,10 @@
         "wires": []
     },
     {
-        "id": "1ba7a6238c90dc2b",
+        "id": "1753bf161389c944",
         "type": "debug",
-        "z": "41eb33bc1590a65b",
-        "g": "b1eb1672c18d7aa3",
+        "z": "be726339755d3c26",
+        "g": "9ac80b23dbfe246e",
         "name": "hue sse",
         "active": true,
         "tosidebar": true,
@@ -1155,5 +1150,31 @@
         "x": 800,
         "y": 120,
         "wires": []
+    },
+    {
+        "id": "259bdd5d7d984d09",
+        "type": "subflow:75bc72a16c4da2c8",
+        "z": "be726339755d3c26",
+        "g": "f03deeed35ea4ed9",
+        "name": "",
+        "env": [
+            {
+                "name": "ADDRESS",
+                "value": "ADDRESS",
+                "type": "env"
+            },
+            {
+                "name": "USERNAME",
+                "value": "USERNAME",
+                "type": "env"
+            }
+        ],
+        "x": 340,
+        "y": 300,
+        "wires": [
+            [
+                "f7cab6ed93a25248"
+            ]
+        ]
     }
 ]
