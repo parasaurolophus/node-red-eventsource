@@ -2,13 +2,13 @@
 
 Wrap the [eventsource](https://github.com/EventSource/eventsource) package as a node.
 
-Used by a personal home automation flow: <https://github.com/parasaurolophus/cheznous>
+Used by a personal home automation flow: <https://github.com/parasaurolophus/automation>
 
 See:
 
 - <https://github.com/EventSource/eventsource>
 - <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>
-- <https://github.com/parasaurolophus/cheznous>
+- <https://github.com/parasaurolophus/automation>
 
 ### Properties
 
