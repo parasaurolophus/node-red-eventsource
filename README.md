@@ -41,7 +41,7 @@ Otherwise, if `msg.payload` is not an object or does not have a `url` property t
 
 Each server-sent event object emitted from the first output will have `msg.payload.type` and `msg.payload.data` fields and `msg.topic` set to `"message"`. The content and format of the `type` and `data` properties are determined by the server:
 
-    {st
+    {
         topic: "message",
         payload: {
             type: "<...some string...>",
