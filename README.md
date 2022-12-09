@@ -41,7 +41,7 @@ Otherwise, if `msg.payload` is not an object or does not have a `url` property t
 
 Each server-sent event object emitted from the first output will have `msg.payload.type` and `msg.payload.data` fields and `msg.topic` set to `"message"`. The content and format of the `type` and `data` properties are determined by the server:
 
-    {
+    {st
         topic: "message",
         payload: {
             type: "<...some string...>",
@@ -94,4 +94,4 @@ This example wraps an `EventSource` node in a subflow and adds a additional subf
 
 The point of this example is not to show how to make use of the Hue Bridge API but, rather, how to implement logic in a Node-RED flow to use a watchdog timer to manage the connection to a SSE server. In particular, the _Server-Sent Events_ subflow defined by this example wraps an `EventSource` node with retry logic based on a watchdog timer. The watchdog timer is started when the wrapped `EventSource` emits an `onopen` event. The timeout period is extended each time a server-sent event is emitted. If the watchdog times out, the original message that opened the connection is sent again to the input of the wrapped `EventSource` node to reestablish the connection. In addition, the `EventSource` status and `onerror` events are monitored to reset and restart the watchdog timer, as appropriate. Use the `TIMEOUT` environment variable to configure the duration of the watchdog timer.
 
-> _Note: for "enterprise" scale applications, more sophisticated retry logic with a shorter initial timeout and increasing delays between connection attempts would be required. The given example works well enough for a home automation system consisting of Node-RED, a MQTT broker and a couple of Hue bridges. See <https://github.com/parasaurolophus/cheznous> for the complete home automation flow from this example was extracted. That shows how to use the rest (pun intended) of the Hue API for full round-trip integration with Hue devices using HTTP requests and server-side events. It also shows how multiple instances of these subflows and ones like it can be used to access multiple Hue bridges concurrently._
+> _Note: for "enterprise" scale applications, more sophisticated retry logic with a shorter initial timeout and increasing delays between connection attempts would be required. The given example works well enough for a home automation system consisting of Node-RED, a MQTT broker and a couple of Hue bridges. See <https://github.com/parasaurolophus/automation> for the complete home automation flow from this example was extracted. That shows how to use the rest (pun intended) of the Hue API for full round-trip integration with Hue devices using HTTP requests and server-side events. It also shows how multiple instances of these subflows and ones like it can be used to access multiple Hue bridges concurrently._
