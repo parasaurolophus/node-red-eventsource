@@ -36,39 +36,11 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         var node = this
 
-        node.url = node.credentials.url || null
-        node.initDict = parseInitDict(node.credentials.initDict)
+        node.url = RED.util.evaluateNodeProperty(node.credentials.url, config.urlType, node)
+        node.initDict = RED.util.evaluateNodeProperty(node.credentials.initDict, config.initDictType, node)
         node.es = null
         node.lastStatus = -2
         node.onclosed = null
-
-        /**
-         * Parse the given JSON string
-         * 
-         * Log errors and return an empty object if parsing fails.
-         * 
-         * @param {*} initDict JSON string
-         *  
-         * @returns JavaScript object 
-         */
-        function parseInitDict(initDict) {
-
-            if (initDict && initDict != '') {
-
-                try {
-
-                    return JSON.parse(initDict)
-
-                } catch (e) {
-
-                    node.warn(e)
-
-                }
-            }
-
-            return {}
-
-        }
 
         /**
          * Called periodically to emit the current `eventsource.readyState`
