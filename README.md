@@ -75,10 +75,10 @@ server:
 
 ```json
 {
-    topic: "message",
-    payload: {
-        type: "<...some string...>",
-        data: "<...message body...>"
+    "topic": "message",
+    "payload": {
+        "type": "<...some string...>",
+        "data": "<...message body...>"
     }
 }
 ```
