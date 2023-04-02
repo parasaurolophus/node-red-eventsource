@@ -17,7 +17,6 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "async-mutex": "^0.3.2",
     "eventsource": "^2.0.2"
   },
   "node-red": {

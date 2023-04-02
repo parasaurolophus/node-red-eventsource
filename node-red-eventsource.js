@@ -11,12 +11,6 @@
 module.exports = function (RED) {
 
     var EventSource = require('eventsource')
-    var Mutex = require('async-mutex').Mutex
-
-    /**
-     * Protect node state
-     */
-    const mutex = new Mutex()
 
     /**
      * Color names for `node.status({text: ... fill: ...})`
@@ -52,37 +46,27 @@ module.exports = function (RED) {
          * As a side-effect, fire node.onclosed callback when
          * `eventsource.readyState` reaches 2.
          */
-        async function status() {
+        function status() {
 
-            const release = await mutex.acquire()
+            const lastStatus = node.lastStatus || -2
+            const currentStatus = node.es ? node.es.readyState : -1
 
-            try {
+            if (currentStatus != lastStatus) {
 
-                const lastStatus = node.lastStatus || -2
-                const currentStatus = node.es ? node.es.readyState : -1
+                node.status({
+                    text: currentStatus,
+                    shape: 'dot',
+                    fill: statusFill[currentStatus + 1]
+                })
 
-                if (currentStatus != lastStatus) {
+                node.lastStatus = currentStatus
 
-                    node.status({
-                        text: currentStatus,
-                        shape: 'dot',
-                        fill: statusFill[currentStatus + 1]
-                    })
+            }
 
-                    node.lastStatus = currentStatus
+            if (currentStatus == 2 && node.onclosed) {
 
-                }
-
-                if (currentStatus == 2 && node.onclosed) {
-
-                    node.onclosed()
-                    node.onclosed = null
-
-                }
-
-            } finally {
-
-                release()
+                node.onclosed()
+                node.onclosed = null
 
             }
         }
@@ -94,39 +78,29 @@ module.exports = function (RED) {
          * 
          * @param {*} initDit `eventSourceInitDict` value
          */
-        async function connect(url, initDict) {
+        function connect(url, initDict) {
 
-            const release = await mutex.acquire()
+            node.url = url
+            node.initDict = initDict || {}
+            node.es = new EventSource(node.url, node.initDict)
 
-            try {
+            node.es.onopen = (evt) => {
 
-                node.url = url
-                node.initDict = initDict || {}
-                node.es = new EventSource(node.url, node.initDict)
+                node.send([null, { topic: 'open', payload: evt }, null])
+                status()
 
-                node.es.onopen = (evt) => {
+            }
 
-                    node.send([null, { topic: 'open', payload: evt }, null])
-                    status()
+            node.es.onerror = (err) => {
 
-                }
+                node.send([null, null, { topic: 'error', payload: err }])
+                status()
 
-                node.es.onerror = (err) => {
+            }
 
-                    node.send([null, null, { topic: 'error', payload: err }])
-                    status()
+            node.es.onmessage = (event) => {
 
-                }
-
-                node.es.onmessage = (event) => {
-
-                    node.send([{ topic: 'message', payload: event }, null, null])
-
-                }
-
-            } finally {
-
-                release()
+                node.send([{ topic: 'message', payload: event }, null, null])
 
             }
 
@@ -142,27 +116,17 @@ module.exports = function (RED) {
          * @param {*} done Callback to inform the runtime asynchronously that
          *                 the node is closed
          */
-        async function close(_removed, done) {
+        function close(_removed, done) {
 
-            const release = await mutex.acquire()
+            if (node.es) {
 
-            try {
-
-                if (node.es) {
-
-                    node.onclosed = done
-                    node.es.close()
+                node.onclosed = done
+                node.es.close()
 
 
-                } else if (done) {
+            } else if (done) {
 
-                    done()
-
-                }
-
-            } finally {
-
-                release()
+                done()
 
             }
         }
