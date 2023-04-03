@@ -1,28 +1,35 @@
 {
-  "name": "@parasaurolophus/node-red-eventsource",
-  "version": "1.4.0",
-  "description": "Wrap eventsource package as a node",
-  "repository": "github:parasaurolophus/node-red-eventsource",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "eventsource",
-    "sse",
-    "node-red"
-  ],
-  "author": "parasaurolophus <apps@rader.us>",
-  "license": "MIT",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "dependencies": {
-    "eventsource": "^2.0.2"
-  },
-  "node-red": {
-    "version": ">=3.0.0",
-    "nodes": [
-      "node-red-eventsource.js"
+    "name": "@parasaurolophus/node-red-eventsource",
+    "version": "1.4.1",
+    "description": "Wrap eventsource package as a node",
+    "main": "node-red-eventsource.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/parasaurolophus/node-red-eventsource.git"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": {
+        "name": "parasaurolophus",
+        "email": "apps@rader.us"
+    },
+    "license": "MIT",
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "dependencies": {
+        "eventsource": "^2.0.2"
+    },
+    "node-red": {
+        "version": ">=3.0.0",
+        "nodes": [
+            "node-red-eventsource.js"
+        ]
+    },
+    "keywords": [
+        "eventsource",
+        "sse",
+        "node-red"
     ]
-  }
 }
