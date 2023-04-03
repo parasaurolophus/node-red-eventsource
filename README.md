@@ -36,6 +36,12 @@ unspecified in the settings dialog then the node will wait
 for an incoming `msg` before attempting to connect as
 described below.
 
+The messages sent to all three outputs will have `msg.topic`
+set to a string prefixed by the value of the _Topic_
+property, as described below (where it is shown as
+`"<topic>"`). The default prefix is `"eventsource"` if not
+set otherwise in the node's settings dialog.
+
 ### Inputs
 
 _Note: Any parameters passed in an incoming message will
@@ -51,7 +57,8 @@ supplied in `msg.payload`. A common use of `initDict` is
 to pass authentication tokens to `EventSource` services
 that require them.
 
-Otherwise, if `msg.payload` is not an object or does not have a `url` property then this node calls the
+Otherwise, if `msg.payload` is not an object or does not
+have a `url` property then this node calls the
 `eventsource.close()` method of the wrapped instance, if it
 exists. If a subsequent message is received, any current
 connection will be closed before attempting to establish a
@@ -75,7 +82,7 @@ server:
 
 ```json
 {
-    "topic": "message",
+    "topic": "<topic>/message",
     "payload": {
         "type": "<...some string...>",
         "data": "<...message body...>"
@@ -95,15 +102,15 @@ encoded representation of some "entity."
 
 The second output will emit the objects sent to the
 `EventSource.onopen` handler. Each such object will have
-`msg.topic` set to `"open"` and `msg.payload` will be the
-value passed to the handler.
+`msg.topic` set to `"<topic>/open"` and `msg.payload`
+will be the value passed to the handler.
 
 #### Output 3: onerror
 
 The third output will emit the objects sent to the
 `EventSource.onerror` handler. Each such object will have
-`msg.topic` set to `"error"` and `msg.payload` will be the
-value passed to the handler. See
+`msg.topic` set to `"<topic>/error"` and `msg.payload`
+will be the value passed to the handler. See
 <https://github.com/EventSource/eventsource#http-status-code-on-error-events>
 for information on the payload content. As with
 `EventSource.onopen` events, the exact `msg.payload` here

@@ -30,8 +30,9 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         var node = this
 
-        node.url = RED.util.evaluateNodeProperty(node.credentials.url, config.urlType, node)
-        node.initDict = RED.util.evaluateNodeProperty(node.credentials.initDict, config.initDictType, node)
+        node.url = node.credentials.url && RED.util.evaluateNodeProperty(node.credentials.url, config.urlType, node)
+        node.initDict = RED.util.evaluateNodeProperty(node.credentials.initDict || "{}", config.initDictType, node)
+        node.topic = RED.util.evaluateNodeProperty(config.topic, "str", node)
         node.es = null
         node.lastStatus = -2
         node.onclosed = null
@@ -86,21 +87,21 @@ module.exports = function (RED) {
 
             node.es.onopen = (evt) => {
 
-                node.send([null, { topic: 'open', payload: evt }, null])
+                node.send([null, { topic: node.topic + '/open', payload: evt }, null])
                 status()
 
             }
 
             node.es.onerror = (err) => {
 
-                node.send([null, null, { topic: 'error', payload: err }])
+                node.send([null, null, { topic: node.topic + '/error', payload: err }])
                 status()
 
             }
 
             node.es.onmessage = (event) => {
 
-                node.send([{ topic: 'message', payload: event }, null, null])
+                node.send([{ topic: node.topic + '/message', payload: event }, null, null])
 
             }
 

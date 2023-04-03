@@ -5,7 +5,8 @@
         defaults: {
             name: { value: "" },
             urlType: { value: "str" },
-            initDictType: { value: "json" }
+            initDictType: { value: "json" },
+            topic: { value: "eventsource" }
         },
         credentials: {
             url: { type: "text" },
@@ -21,6 +22,10 @@
                 type: "json",
                 types: ["json", "jsonata"],
                 typeField: "#node-input-initDictType"
+            })
+            $("#node-input-topic").typedInput({
+                type: "str",
+                types: ["str"]
             })
         },
         inputs: 1,
@@ -46,8 +51,12 @@
     </div>
     <div class="form-row">
         <label for="node-input-initDict"><i class="fa fa-tag"></i> initDict</label>
-        <input type="text" id="node-input-initDict">
+        <input type="text" id="node-input-initDict" value="{}">
         <input type="hidden" id="node-input-initDictType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tag"></i> Topic</label>
+        <input type="text" id="node-input-topic" value="eventsource">
     </div>
 </script>
 
