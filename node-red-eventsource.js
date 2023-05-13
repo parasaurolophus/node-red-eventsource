@@ -1,4 +1,4 @@
-// Copyright 2022 Kirk Rader
+// Copyright 2023 Kirk Rader
 
 // See accompanying LICENSE file for open source usage permissions
 
@@ -77,7 +77,7 @@ module.exports = function (RED) {
          * 
          * @param {*} url SSE server URL
          * 
-         * @param {*} initDit `eventSourceInitDict` value
+         * @param {*} initDict `eventSourceInitDict` value
          */
         function connect(url, initDict) {
 
