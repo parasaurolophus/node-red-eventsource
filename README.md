@@ -24,7 +24,7 @@ variables.
 
 The node settings also includes a property named `initDict` whose value is
 passed as the second parameter to the wrapped `EventSource` constructor. It can
-be specified using JSON.
+be specified using JSON or JSONata.
 
 Both URL and `initDict` properties are stored as credentials because they might
 include authentication tokens or similar sensitve data. Both are optional. If

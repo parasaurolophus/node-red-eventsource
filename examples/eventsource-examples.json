@@ -2,27 +2,27 @@
     {
         "id": "b8bba80a384e3a94",
         "type": "comment",
-        "z": "1ddb67de56fd0cf4",
-        "name": "This example assume ${ADDRESS} and ${KEY} are set appropriately for a Philips Hue Bridge",
+        "z": "c06ddd19ef9a9fc1",
+        "name": "These examples assume ${ADDRESS} and ${KEY} are set appropriately for a Philips Hue Bridge",
         "info": "",
-        "x": 360,
-        "y": 60,
+        "x": 350,
+        "y": 40,
         "wires": []
     },
     {
         "id": "ec81dd46f5505143",
         "type": "comment",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "name": "Change them as appropriate for the server to which you wish to connect",
         "info": "",
-        "x": 290,
-        "y": 100,
+        "x": 270,
+        "y": 80,
         "wires": []
     },
     {
         "id": "150497636af627d7",
         "type": "group",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "name": "EventSource that waits for a msg with connection properties to connect",
         "style": {
             "label": true
@@ -36,22 +36,22 @@
             "9055d5f42e64e6d0",
             "bdc3329abbb0475d"
         ],
-        "x": 34,
-        "y": 139,
+        "x": 14,
+        "y": 119,
         "w": 752,
         "h": 202
     },
     {
         "id": "59cab9a4ce66b03c",
         "type": "EventSource",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "g": "150497636af627d7",
         "name": "",
         "urlType": "str",
         "initDictType": "json",
         "topic": "",
-        "x": 430,
-        "y": 240,
+        "x": 410,
+        "y": 220,
         "wires": [
             [
                 "39f038d170d86dc3"
@@ -68,7 +68,7 @@
     {
         "id": "4a4546235f310cc6",
         "type": "inject",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "g": "150497636af627d7",
         "name": "close",
         "props": [
@@ -83,8 +83,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 270,
-        "y": 280,
+        "x": 250,
+        "y": 260,
         "wires": [
             [
                 "59cab9a4ce66b03c"
@@ -94,7 +94,7 @@
     {
         "id": "39f038d170d86dc3",
         "type": "debug",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "g": "150497636af627d7",
         "name": "server-sent event",
         "active": true,
@@ -105,14 +105,14 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "counter",
-        "x": 650,
-        "y": 180,
+        "x": 630,
+        "y": 160,
         "wires": []
     },
     {
         "id": "292fa4d56c6aa43c",
         "type": "debug",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "g": "150497636af627d7",
         "name": "eventsource open",
         "active": true,
@@ -123,14 +123,14 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "counter",
-        "x": 650,
-        "y": 240,
+        "x": 630,
+        "y": 220,
         "wires": []
     },
     {
         "id": "45d7b25da70cce2c",
         "type": "debug",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "g": "150497636af627d7",
         "name": "eventsource error",
         "active": true,
@@ -141,14 +141,14 @@
         "targetType": "full",
         "statusVal": "topic",
         "statusType": "msg",
-        "x": 650,
-        "y": 300,
+        "x": 630,
+        "y": 280,
         "wires": []
     },
     {
         "id": "9055d5f42e64e6d0",
         "type": "function",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "g": "150497636af627d7",
         "name": "open",
         "func": "return {\n    payload: {\n        url: 'https://' + env.get('ADDRESS') + '/eventstream/clip/v2',\n        initDict: {\n            withCredentials: false,\n            https: {\n                rejectUnauthorized: false\n            },\n            headers: {\n                'hue-application-key': env.get('KEY')\n            }\n        }\n    }\n}",
@@ -158,8 +158,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 270,
-        "y": 200,
+        "x": 250,
+        "y": 180,
         "wires": [
             [
                 "59cab9a4ce66b03c"
@@ -169,7 +169,7 @@
     {
         "id": "bdc3329abbb0475d",
         "type": "inject",
-        "z": "1ddb67de56fd0cf4",
+        "z": "c06ddd19ef9a9fc1",
         "g": "150497636af627d7",
         "name": "",
         "props": [
@@ -188,12 +188,108 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 140,
-        "y": 200,
+        "x": 120,
+        "y": 180,
         "wires": [
             [
                 "9055d5f42e64e6d0"
             ]
         ]
+    },
+    {
+        "id": "950d2936066f0c9f",
+        "type": "group",
+        "z": "c06ddd19ef9a9fc1",
+        "name": "EventSource with preset configuration",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "db9df93df0c8cebb",
+            "c218eec39c276320",
+            "5e3d57ce70a0db5a",
+            "099442aec9d401ec"
+        ],
+        "x": 14,
+        "y": 339,
+        "w": 452,
+        "h": 202
+    },
+    {
+        "id": "db9df93df0c8cebb",
+        "type": "EventSource",
+        "z": "c06ddd19ef9a9fc1",
+        "g": "950d2936066f0c9f",
+        "name": "",
+        "urlType": "env",
+        "initDictType": "jsonata",
+        "topic": "hue1",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            [
+                "c218eec39c276320"
+            ],
+            [
+                "5e3d57ce70a0db5a"
+            ],
+            [
+                "099442aec9d401ec"
+            ]
+        ]
+    },
+    {
+        "id": "c218eec39c276320",
+        "type": "debug",
+        "z": "c06ddd19ef9a9fc1",
+        "g": "950d2936066f0c9f",
+        "name": "server-sent event",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "counter",
+        "x": 330,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "5e3d57ce70a0db5a",
+        "type": "debug",
+        "z": "c06ddd19ef9a9fc1",
+        "g": "950d2936066f0c9f",
+        "name": "eventsource open",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "counter",
+        "x": 330,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "099442aec9d401ec",
+        "type": "debug",
+        "z": "c06ddd19ef9a9fc1",
+        "g": "950d2936066f0c9f",
+        "name": "eventsource error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "topic",
+        "statusType": "msg",
+        "x": 330,
+        "y": 500,
+        "wires": []
     }
 ]

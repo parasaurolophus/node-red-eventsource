@@ -30,13 +30,6 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config)
         var node = this
 
-        node.url = node.credentials.url && RED.util.evaluateNodeProperty(node.credentials.url, config.urlType, node)
-        node.initDict = RED.util.evaluateNodeProperty(node.credentials.initDict || "{}", config.initDictType, node)
-        node.topic = RED.util.evaluateNodeProperty(config.topic, "str", node)
-        node.es = null
-        node.lastStatus = -2
-        node.onclosed = null
-
         /**
          * Called periodically to emit the current `eventsource.readyState`
          * as the node's status
@@ -151,22 +144,42 @@ module.exports = function (RED) {
             }
         }
 
-        node.on('close', close)
+        return new Promise((resolve, reject) => {
 
-        node.on('input', function (msg) {
+            RED.util.evaluateNodeProperty(node.credentials.initDict || "{}", config.initDictType, node, null, (err, value) => {
 
-            handleMessage(msg)
+                if (err) {
 
+                    reject(err)
+
+                }
+
+                node.initDict = value
+                node.url = node.credentials.url && RED.util.evaluateNodeProperty(node.credentials.url, config.urlType, node)
+                node.topic = RED.util.evaluateNodeProperty(config.topic, "str", node)
+                node.es = null
+                node.lastStatus = -2
+                node.onclosed = null
+                node.on('close', close)
+                node.on('input', function (msg) {
+
+                    handleMessage(msg)
+
+                })
+
+
+                setInterval(status, 1000)
+
+                if (node.url) {
+
+                    connect(node.url, node.initDict)
+
+                }
+
+                resolve(node)
+
+            })
         })
-
-
-        setInterval(status, 1000)
-
-        if (node.url) {
-
-            connect(node.url, node.initDict)
-
-        }
     }
 
     RED.nodes.registerType(
