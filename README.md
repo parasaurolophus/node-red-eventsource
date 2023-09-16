@@ -26,11 +26,6 @@ The node settings also includes a property named `initDict` whose value is
 passed as the second parameter to the wrapped `EventSource` constructor. It can
 be specified using JSON or JSONata.
 
-Both URL and `initDict` properties are stored as credentials because they might
-include authentication tokens or similar sensitve data. Both are optional. If
-the URL is left unspecified in the settings dialog then the node will wait for
-an incoming `msg` before attempting to connect as described below.
-
 The messages sent to all three outputs will have `msg.topic` set to a string
 prefixed by the value of the _Topic_ property, as described below (where it is
 shown as `"<topic>"`). The default prefix is `"eventsource"` if not set

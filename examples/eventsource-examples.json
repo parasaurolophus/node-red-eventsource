@@ -2,7 +2,7 @@
     {
         "id": "b8bba80a384e3a94",
         "type": "comment",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "name": "These examples assume ${ADDRESS} and ${KEY} are set appropriately for a Philips Hue Bridge",
         "info": "",
         "x": 350,
@@ -12,7 +12,7 @@
     {
         "id": "ec81dd46f5505143",
         "type": "comment",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "name": "Change them as appropriate for the server to which you wish to connect",
         "info": "",
         "x": 270,
@@ -22,53 +22,29 @@
     {
         "id": "150497636af627d7",
         "type": "group",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "name": "EventSource that waits for a msg with connection properties to connect",
         "style": {
             "label": true
         },
         "nodes": [
-            "59cab9a4ce66b03c",
             "4a4546235f310cc6",
             "39f038d170d86dc3",
             "292fa4d56c6aa43c",
             "45d7b25da70cce2c",
             "9055d5f42e64e6d0",
-            "bdc3329abbb0475d"
+            "bdc3329abbb0475d",
+            "a539cfc8ba41c523"
         ],
         "x": 14,
-        "y": 119,
+        "y": 339,
         "w": 752,
         "h": 202
     },
     {
-        "id": "59cab9a4ce66b03c",
-        "type": "EventSource",
-        "z": "c06ddd19ef9a9fc1",
-        "g": "150497636af627d7",
-        "name": "",
-        "urlType": "str",
-        "initDictType": "json",
-        "topic": "",
-        "x": 410,
-        "y": 220,
-        "wires": [
-            [
-                "39f038d170d86dc3"
-            ],
-            [
-                "292fa4d56c6aa43c"
-            ],
-            [
-                "45d7b25da70cce2c"
-            ]
-        ],
-        "info": "Change the `url` and `initDict` properties to match your SSE server's configuration.\n\nFor example, here are the parameters for one of the Philips Hue bridges in a home automation system:\n\n- `url`:\n\n        https://192.168.1.34/eventstream/clip/v2\n\n- `initDict`:\n\n        {\n            \"withCredentials\": false,\n            \"https\": {\n                \"rejectUnauthorized\": false\n            },\n            \"headers\": {\n                \"hue-application-key\": \"-6ay0JIz8Kd1PV00yBYQ75bo6hlVBN2mopvXnrNa\"\n            }\n        }\n\nTo use your own Hue bridge, change the IP address in the URL and your own propertly configured access token as the value for the `hue-application-key` header. You will need to make more extensive changes to the URL and `initDict` parameters to use this example with a completely different type of SSE server.\n\nSee:\n\n- <https://developers.meethue.com/develop/hue-api-v2/core-concepts/#events>\n\n- <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>\n\n- <https://github.com/EventSource/eventsource>"
-    },
-    {
         "id": "4a4546235f310cc6",
         "type": "inject",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "150497636af627d7",
         "name": "close",
         "props": [
@@ -84,17 +60,17 @@
         "payload": "",
         "payloadType": "date",
         "x": 250,
-        "y": 260,
+        "y": 480,
         "wires": [
             [
-                "59cab9a4ce66b03c"
+                "a539cfc8ba41c523"
             ]
         ]
     },
     {
         "id": "39f038d170d86dc3",
         "type": "debug",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "150497636af627d7",
         "name": "server-sent event",
         "active": true,
@@ -106,13 +82,13 @@
         "statusVal": "",
         "statusType": "counter",
         "x": 630,
-        "y": 160,
+        "y": 380,
         "wires": []
     },
     {
         "id": "292fa4d56c6aa43c",
         "type": "debug",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "150497636af627d7",
         "name": "eventsource open",
         "active": true,
@@ -124,13 +100,13 @@
         "statusVal": "",
         "statusType": "counter",
         "x": 630,
-        "y": 220,
+        "y": 440,
         "wires": []
     },
     {
         "id": "45d7b25da70cce2c",
         "type": "debug",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "150497636af627d7",
         "name": "eventsource error",
         "active": true,
@@ -142,16 +118,16 @@
         "statusVal": "topic",
         "statusType": "msg",
         "x": 630,
-        "y": 280,
+        "y": 500,
         "wires": []
     },
     {
         "id": "9055d5f42e64e6d0",
         "type": "function",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "150497636af627d7",
         "name": "open",
-        "func": "return {\n    payload: {\n        url: 'https://' + env.get('ADDRESS') + '/eventstream/clip/v2',\n        initDict: {\n            withCredentials: false,\n            https: {\n                rejectUnauthorized: false\n            },\n            headers: {\n                'hue-application-key': env.get('KEY')\n            }\n        }\n    }\n}",
+        "func": "return {\n    payload: {\n        topic: 'hue2',\n        url: 'https://' + env.get('ADDRESS') + '/eventstream/clip/v2',\n        initDict: {\n            withCredentials: false,\n            https: {\n                rejectUnauthorized: false\n            },\n            headers: {\n                'hue-application-key': env.get('KEY')\n            }\n        }\n    }\n}",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -159,17 +135,17 @@
         "finalize": "",
         "libs": [],
         "x": 250,
-        "y": 180,
+        "y": 400,
         "wires": [
             [
-                "59cab9a4ce66b03c"
+                "a539cfc8ba41c523"
             ]
         ]
     },
     {
         "id": "bdc3329abbb0475d",
         "type": "inject",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "150497636af627d7",
         "name": "",
         "props": [
@@ -189,7 +165,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 180,
+        "y": 400,
         "wires": [
             [
                 "9055d5f42e64e6d0"
@@ -197,51 +173,53 @@
         ]
     },
     {
+        "id": "a539cfc8ba41c523",
+        "type": "EventSource",
+        "z": "997fb608a945ca72",
+        "g": "150497636af627d7",
+        "name": "",
+        "url": "",
+        "urlType": "str",
+        "initDict": "{}",
+        "initDictType": "json",
+        "topic": "eventsource",
+        "x": 410,
+        "y": 440,
+        "wires": [
+            [
+                "39f038d170d86dc3"
+            ],
+            [
+                "292fa4d56c6aa43c"
+            ],
+            [
+                "45d7b25da70cce2c"
+            ]
+        ]
+    },
+    {
         "id": "950d2936066f0c9f",
         "type": "group",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "name": "EventSource with preset configuration",
         "style": {
             "label": true
         },
         "nodes": [
-            "db9df93df0c8cebb",
             "c218eec39c276320",
             "5e3d57ce70a0db5a",
-            "099442aec9d401ec"
+            "099442aec9d401ec",
+            "956ff443fc5f1310"
         ],
         "x": 14,
-        "y": 339,
+        "y": 119,
         "w": 452,
         "h": 202
     },
     {
-        "id": "db9df93df0c8cebb",
-        "type": "EventSource",
-        "z": "c06ddd19ef9a9fc1",
-        "g": "950d2936066f0c9f",
-        "name": "",
-        "urlType": "env",
-        "initDictType": "jsonata",
-        "topic": "hue1",
-        "x": 110,
-        "y": 440,
-        "wires": [
-            [
-                "c218eec39c276320"
-            ],
-            [
-                "5e3d57ce70a0db5a"
-            ],
-            [
-                "099442aec9d401ec"
-            ]
-        ]
-    },
-    {
         "id": "c218eec39c276320",
         "type": "debug",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "950d2936066f0c9f",
         "name": "server-sent event",
         "active": true,
@@ -253,13 +231,13 @@
         "statusVal": "",
         "statusType": "counter",
         "x": 330,
-        "y": 380,
+        "y": 160,
         "wires": []
     },
     {
         "id": "5e3d57ce70a0db5a",
         "type": "debug",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "950d2936066f0c9f",
         "name": "eventsource open",
         "active": true,
@@ -271,13 +249,13 @@
         "statusVal": "",
         "statusType": "counter",
         "x": 330,
-        "y": 440,
+        "y": 220,
         "wires": []
     },
     {
         "id": "099442aec9d401ec",
         "type": "debug",
-        "z": "c06ddd19ef9a9fc1",
+        "z": "997fb608a945ca72",
         "g": "950d2936066f0c9f",
         "name": "eventsource error",
         "active": true,
@@ -289,7 +267,32 @@
         "statusVal": "topic",
         "statusType": "msg",
         "x": 330,
-        "y": 500,
+        "y": 280,
         "wires": []
+    },
+    {
+        "id": "956ff443fc5f1310",
+        "type": "EventSource",
+        "z": "997fb608a945ca72",
+        "g": "950d2936066f0c9f",
+        "name": "",
+        "url": "https://${ADDRESS}/eventstream/clip/v2",
+        "urlType": "env",
+        "initDict": "{\t   \"withCredentials\": false,\t   \"https\": {\t       \"rejectUnauthorized\": false\t    },\t   \"headers\": {\t       \"hue-application-key\": $env('KEY')\t    }\t}",
+        "initDictType": "jsonata",
+        "topic": "hue1",
+        "x": 110,
+        "y": 220,
+        "wires": [
+            [
+                "c218eec39c276320"
+            ],
+            [
+                "5e3d57ce70a0db5a"
+            ],
+            [
+                "099442aec9d401ec"
+            ]
+        ]
     }
 ]

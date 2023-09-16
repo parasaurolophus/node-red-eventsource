@@ -27,8 +27,7 @@ module.exports = function (RED) {
      */
     function eventsource(config) {
 
-        RED.nodes.createNode(this, config)
-        var node = this
+        var node
 
         /**
          * Called periodically to emit the current `eventsource.readyState`
@@ -135,6 +134,10 @@ module.exports = function (RED) {
             // clean up current connection, if any
             close(false, null)
 
+            node.url = msg.payload.url || node.url
+            node.topic = msg.payload.topic || node.topic
+            node.initDict = msg.payload.initDict || node.initDict
+
             // attempt to open a new connection if msg.payload is an object
             // with a url property
             if ((typeof msg.payload) == 'object' && msg.payload.url !== undefined) {
@@ -146,7 +149,10 @@ module.exports = function (RED) {
 
         return new Promise((resolve, reject) => {
 
-            RED.util.evaluateNodeProperty(node.credentials.initDict || "{}", config.initDictType, node, null, (err, value) => {
+            RED.nodes.createNode(this, config)
+            node = this
+
+            RED.util.evaluateNodeProperty(config.initDict, config.initDictType, node, null, (err, value) => {
 
                 if (err) {
 
@@ -155,7 +161,7 @@ module.exports = function (RED) {
                 }
 
                 node.initDict = value
-                node.url = node.credentials.url && RED.util.evaluateNodeProperty(node.credentials.url, config.urlType, node)
+                node.url = RED.util.evaluateNodeProperty(config.url, config.urlType, node)
                 node.topic = RED.util.evaluateNodeProperty(config.topic, "str", node)
                 node.es = null
                 node.lastStatus = -2
@@ -166,7 +172,6 @@ module.exports = function (RED) {
                     handleMessage(msg)
 
                 })
-
 
                 setInterval(status, 1000)
 
@@ -182,14 +187,6 @@ module.exports = function (RED) {
         })
     }
 
-    RED.nodes.registerType(
-        "EventSource",
-        eventsource,
-        {
-            credentials: {
-                url: { type: "text" },
-                initDict: { type: "text" }
-            }
-        })
+    RED.nodes.registerType("EventSource", eventsource)
 
 }
