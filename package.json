@@ -1,6 +1,6 @@
 {
     "name": "@parasaurolophus/node-red-eventsource",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Wrap eventsource package as a node",
     "main": "node-red-eventsource.js",
     "repository": {

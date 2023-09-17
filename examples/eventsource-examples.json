@@ -6,7 +6,7 @@
         "name": "These examples assume ${ADDRESS} and ${KEY} are set appropriately for a Philips Hue Bridge",
         "info": "",
         "x": 350,
-        "y": 40,
+        "y": 60,
         "wires": []
     },
     {
@@ -16,7 +16,7 @@
         "name": "Change them as appropriate for the server to which you wish to connect",
         "info": "",
         "x": 270,
-        "y": 80,
+        "y": 100,
         "wires": []
     },
     {
@@ -34,10 +34,10 @@
             "45d7b25da70cce2c",
             "9055d5f42e64e6d0",
             "bdc3329abbb0475d",
-            "a539cfc8ba41c523"
+            "59bff11b15203910"
         ],
         "x": 14,
-        "y": 339,
+        "y": 359,
         "w": 752,
         "h": 202
     },
@@ -60,10 +60,10 @@
         "payload": "",
         "payloadType": "date",
         "x": 250,
-        "y": 480,
+        "y": 500,
         "wires": [
             [
-                "a539cfc8ba41c523"
+                "59bff11b15203910"
             ]
         ]
     },
@@ -82,7 +82,7 @@
         "statusVal": "",
         "statusType": "counter",
         "x": 630,
-        "y": 380,
+        "y": 400,
         "wires": []
     },
     {
@@ -100,7 +100,7 @@
         "statusVal": "",
         "statusType": "counter",
         "x": 630,
-        "y": 440,
+        "y": 460,
         "wires": []
     },
     {
@@ -118,7 +118,7 @@
         "statusVal": "topic",
         "statusType": "msg",
         "x": 630,
-        "y": 500,
+        "y": 520,
         "wires": []
     },
     {
@@ -135,10 +135,10 @@
         "finalize": "",
         "libs": [],
         "x": 250,
-        "y": 400,
+        "y": 420,
         "wires": [
             [
-                "a539cfc8ba41c523"
+                "59bff11b15203910"
             ]
         ]
     },
@@ -165,7 +165,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 400,
+        "y": 420,
         "wires": [
             [
                 "9055d5f42e64e6d0"
@@ -173,7 +173,7 @@
         ]
     },
     {
-        "id": "a539cfc8ba41c523",
+        "id": "59bff11b15203910",
         "type": "EventSource",
         "z": "997fb608a945ca72",
         "g": "150497636af627d7",
@@ -184,7 +184,7 @@
         "initDictType": "json",
         "topic": "eventsource",
         "x": 410,
-        "y": 440,
+        "y": 460,
         "wires": [
             [
                 "39f038d170d86dc3"
@@ -209,11 +209,12 @@
             "c218eec39c276320",
             "5e3d57ce70a0db5a",
             "099442aec9d401ec",
-            "956ff443fc5f1310"
+            "1c254b6549877dac",
+            "e85f750e1ef5c1e5"
         ],
         "x": 14,
-        "y": 119,
-        "w": 452,
+        "y": 139,
+        "w": 592,
         "h": 202
     },
     {
@@ -230,8 +231,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "counter",
-        "x": 330,
-        "y": 160,
+        "x": 470,
+        "y": 180,
         "wires": []
     },
     {
@@ -248,8 +249,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "counter",
-        "x": 330,
-        "y": 220,
+        "x": 470,
+        "y": 240,
         "wires": []
     },
     {
@@ -266,12 +267,38 @@
         "targetType": "full",
         "statusVal": "topic",
         "statusType": "msg",
-        "x": 330,
-        "y": 280,
+        "x": 470,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "956ff443fc5f1310",
+        "id": "1c254b6549877dac",
+        "type": "inject",
+        "z": "997fb608a945ca72",
+        "g": "950d2936066f0c9f",
+        "name": "close",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "e85f750e1ef5c1e5"
+            ]
+        ]
+    },
+    {
+        "id": "e85f750e1ef5c1e5",
         "type": "EventSource",
         "z": "997fb608a945ca72",
         "g": "950d2936066f0c9f",
@@ -281,8 +308,8 @@
         "initDict": "{\t   \"withCredentials\": false,\t   \"https\": {\t       \"rejectUnauthorized\": false\t    },\t   \"headers\": {\t       \"hue-application-key\": $env('KEY')\t    }\t}",
         "initDictType": "jsonata",
         "topic": "hue1",
-        "x": 110,
-        "y": 220,
+        "x": 250,
+        "y": 240,
         "wires": [
             [
                 "c218eec39c276320"

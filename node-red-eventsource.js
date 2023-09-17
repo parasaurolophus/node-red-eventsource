@@ -147,16 +147,16 @@ module.exports = function (RED) {
             }
         }
 
-        return new Promise((resolve, reject) => {
+        RED.nodes.createNode(this, config)
+        node = this
 
-            RED.nodes.createNode(this, config)
-            node = this
+        RED.util.evaluateNodeProperty(config.initDict, config.initDictType, node, null, (err, value) => {
 
-            RED.util.evaluateNodeProperty(config.initDict, config.initDictType, node, null, (err, value) => {
+            try {
 
                 if (err) {
 
-                    reject(err)
+                    throw err
 
                 }
 
@@ -181,9 +181,12 @@ module.exports = function (RED) {
 
                 }
 
-                resolve(node)
+            } catch (e) {
 
-            })
+                RED.log.error(e)
+                node.status({ text: 'eventsource', shape: 'ring', fill: 'red' })
+
+            }
         })
     }
 
