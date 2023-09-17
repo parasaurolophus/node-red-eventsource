@@ -8,6 +8,9 @@ use with [Node-RED](https://nodered.org)
 Used by a personal home automation flow:
 <https://github.com/parasaurolophus/home-automation>
 
+Tested with Node-RED 3.1 on Node.js 20.x. May not be compatible with earlier
+versions.
+
 See:
 
 - <https://github.com/EventSource/eventsource>
