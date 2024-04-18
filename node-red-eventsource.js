@@ -41,8 +41,8 @@ module.exports = function (RED) {
          */
         function status() {
 
-            const lastStatus = node.lastStatus || -2
-            const currentStatus = node.es ? node.es.readyState : -1
+            const lastStatus = node.lastStatus ?? -2
+            const currentStatus = node.es?.readyState ?? -1
 
             if (currentStatus != lastStatus) {
 
@@ -53,14 +53,12 @@ module.exports = function (RED) {
                 })
 
                 node.lastStatus = currentStatus
-
             }
 
             if (currentStatus == 2 && node.onclosed) {
 
                 node.onclosed()
                 node.onclosed = null
-
             }
         }
 
@@ -79,48 +77,52 @@ module.exports = function (RED) {
 
             node.es.onopen = (evt) => {
 
-                node.send([null, { topic: node.topic + '/open', payload: evt }, null])
+                node.send([
+                    null,
+                    { payload: evt, topic: 'open' },
+                    null,
+                ])
                 status()
-
             }
 
             node.es.onerror = (err) => {
 
-                node.send([null, null, { topic: node.topic + '/error', payload: err }])
+                node.send([
+                    null,
+                    null,
+                    { payload: err, topic: 'error' },
+                ])
                 status()
-
             }
 
             node.es.onmessage = (event) => {
 
-                node.send([{ topic: node.topic + '/message', payload: event }, null, null])
-
+                node.send([
+                    { payload: event, topic: 'message' },
+                    null,
+                    null,
+                ])
+                status()
             }
-
-            status()
-
         }
 
         /**
          * Node-RED life-cycle method called when the flow is being stopped or
          * the node disabled.
          * 
-         * @param {*} _removed Ignored
          * @param {*} done Callback to inform the runtime asynchronously that
          *                 the node is closed
          */
-        function close(_removed, done) {
+        function close(_, done) {
 
             if (node.es) {
 
                 node.onclosed = done
                 node.es.close()
 
-
             } else if (done) {
 
                 done()
-
             }
         }
 
@@ -135,7 +137,6 @@ module.exports = function (RED) {
             close(false, null)
 
             node.url = msg.payload.url || node.url
-            node.topic = msg.payload.topic || node.topic
             node.initDict = msg.payload.initDict || node.initDict
 
             // attempt to open a new connection if msg.payload is an object
@@ -143,53 +144,51 @@ module.exports = function (RED) {
             if ((typeof msg.payload) == 'object' && msg.payload.url !== undefined) {
 
                 connect(msg.payload.url, msg.payload.initDict || {})
-
             }
         }
 
         RED.nodes.createNode(this, config)
         node = this
 
-        RED.util.evaluateNodeProperty(config.initDict, config.initDictType, node, null, (err, value) => {
+        return new Promise((resolve, _) => {
 
-            try {
+            RED.util.evaluateNodeProperty(config.initDict, config.initDictType, node, null, (err, value) => {
 
-                if (err) {
+                try {
 
-                    throw err
+                    if (err) {
 
+                        throw err
+                    }
+
+                    node.initDict = value
+                    node.url = RED.util.evaluateNodeProperty(config.url, config.urlType, node)
+                    node.es = null
+                    node.lastStatus = -2
+                    node.onclosed = null
+                    node.on('close', close)
+                    node.on('input', function (msg) {
+
+                        handleMessage(msg)
+                    })
+
+                    setInterval(status, 1000)
+
+                    if (node.url) {
+
+                        connect(node.url, node.initDict)
+                    }
+
+                } catch (e) {
+
+                    RED.log.error(e)
+                    node.status({ text: 'error parsing properties', shape: 'ring', fill: 'red' })
                 }
 
-                node.initDict = value
-                node.url = RED.util.evaluateNodeProperty(config.url, config.urlType, node)
-                node.topic = RED.util.evaluateNodeProperty(config.topic, "str", node)
-                node.es = null
-                node.lastStatus = -2
-                node.onclosed = null
-                node.on('close', close)
-                node.on('input', function (msg) {
-
-                    handleMessage(msg)
-
-                })
-
-                setInterval(status, 1000)
-
-                if (node.url) {
-
-                    connect(node.url, node.initDict)
-
-                }
-
-            } catch (e) {
-
-                RED.log.error(e)
-                node.status({ text: 'eventsource', shape: 'ring', fill: 'red' })
-
-            }
+                resolve(node)
+            })
         })
     }
 
     RED.nodes.registerType("EventSource", eventsource)
-
 }

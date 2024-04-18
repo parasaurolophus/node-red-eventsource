@@ -3,7 +3,7 @@
 Wrap the [eventsource](https://www.npmjs.com/package/eventsource) package for
 use with [Node-RED](https://nodered.org)
 
-![](./screenshot.png)
+![screenshot](./screenshot.png)
 
 Used by a personal home automation flow:
 <https://github.com/parasaurolophus/home-automation>
@@ -17,7 +17,29 @@ See:
 - <https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>
 - <https://github.com/parasaurolophus/home-automation>
 
-### Node Properties
+## Overview
+
+An `EventSource` node listens for event messages sent asynchronously by a
+server, forwarding them as they arrive to other nodes downstream in a flow.
+
+```mermaid
+graph LR
+
+    server[Server]
+
+    subgraph Node-RED
+    eventsource[EventSource]
+    flow[Flow]
+    end
+
+    server -- Server-Sent Events --> eventsource
+    eventsource -- onopen\nServer-Sent Events\nonerror --> flow
+```
+
+The SSE (Server-Sent Event) and life-cycle state messages are as described by
+<https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events>
+
+## Node Properties
 
 If a URL is set in the node settings dialog, the node will attempt to connect
 automatically each time the flow is (re-)started. Such a node will still respond
@@ -29,12 +51,7 @@ The node settings also includes a property named `initDict` whose value is
 passed as the second parameter to the wrapped `EventSource` constructor. It can
 be specified using JSON or JSONata.
 
-The messages sent to all three outputs will have `msg.topic` set to a string
-prefixed by the value of the _Topic_ property, as described below (where it is
-shown as `"<topic>"`). The default prefix is `"eventsource"` if not set
-otherwise in the node's settings dialog.
-
-### Inputs
+## Inputs
 
 _Note: Any parameters passed in an incoming message will override the
 corresponding properties specified via the node's settings dialog._
@@ -51,7 +68,7 @@ then this node calls the `eventsource.close()` method of the wrapped instance,
 if it exists. If a subsequent message is received, any current connection will
 be closed before attempting to establish a new connection.
 
-### Outputs
+## Outputs
 
 1. Asynchronous stream of server-sent event objects
 2. Asynchronous stream of `EventSource.onopen` life-cycle
@@ -59,7 +76,7 @@ be closed before attempting to establish a new connection.
 3. Asynchronous stream of `EventSource.onerror` life-cycle
    messages
 
-#### Output 1: Server-Sent Events
+### Output 1: Server-Sent Events
 
 Each server-sent event object emitted from the first output will have
 `msg.payload.type` and `msg.payload.data` fields and `msg.topic` set to
@@ -68,11 +85,11 @@ determined by the server:
 
 ```json
 {
-    "topic": "<topic>/message",
-    "payload": {
-        "type": "<...some string...>",
-        "data": "<...message body...>"
-    }
+  "topic": "message",
+  "payload": {
+    "type": "<...some string...>",
+    "data": "<...message body...>"
+  }
 }
 ```
 
@@ -83,16 +100,16 @@ event sent by a given server. The value of the `data` field may be anything that
 can be encoded in a HTTP response message but is often the HTML, JSON or XML
 encoded representation of some "entity."
 
-#### Output 2: onopen
+### Output 2: onopen
 
 The second output will emit the objects sent to the `EventSource.onopen`
-handler. Each such object will have `msg.topic` set to `"<topic>/open"` and
+handler. Each such object will have `msg.topic` set to `"open"` and
 `msg.payload` will be the value passed to the handler.
 
-#### Output 3: onerror
+### Output 3: onerror
 
 The third output will emit the objects sent to the `EventSource.onerror`
-handler. Each such object will have `msg.topic` set to `"<topic>/error"` and
+handler. Each such object will have `msg.topic` set to `"error"` and
 `msg.payload` will be the value passed to the handler. See
 <https://github.com/EventSource/eventsource#http-status-code-on-error-events>
 for information on the payload content. As with `EventSource.onopen` events, the
@@ -103,7 +120,7 @@ is that receipt of any event of this type indicates that the connection is
 experiencing (hopefully transient) issues and the underlying library package is
 still attempting to automatically (re-)connect.
 
-### Details
+## Details
 
 This is a deliberately minimalist implementation of the protocol and JavaScript
 interface underlying the standard _EventSource_ feature available in modern web
@@ -121,11 +138,11 @@ The `status.text` of the `EventSource` node can be used to track the state of
 the connection:
 
 | `status.text` | Description                                                                                     |
-|---------------|-------------------------------------------------------------------------------------------------|
+| ------------- | ----------------------------------------------------------------------------------------------- |
 | `-1`          | The `eventsource` client object has not yet been created since the flow was last (re-)started   |
-|  `0`          | The `eventsource.readyState` value indicating the client is attempting to connect to the server |
-|  `1`          | The `eventsource.readyState` value indicating the client is currently connected to the server   |
-|  `2`          | The `eventsource.readyState` value indicating the connection has failed                         |
+| `0`           | The `eventsource.readyState` value indicating the client is attempting to connect to the server |
+| `1`           | The `eventsource.readyState` value indicating the client is currently connected to the server   |
+| `2`           | The `eventsource.readyState` value indicating the connection has failed                         |
 
 The `EventSource` node's status will oscillate between 0 and 1 as the wrapped
 `eventsource` instance attempts to stay connected. If the status reaches 2,
